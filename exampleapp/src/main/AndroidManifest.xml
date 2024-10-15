@@ -21,6 +21,8 @@
         </activity>
         <activity
             android:name="com.suddenh4x.ratingdialog.exampleapp.composeexample.ComposeExampleActivity"
-            android:exported="false" />
+            android:exported="true" >
+
+        </activity>
     </application>
 </manifest>

@@ -21,7 +21,10 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,7 +37,7 @@ import com.suddenh4x.ratingdialog.exampleapp.composeexample.composetheme.LightCo
 @Composable
 fun ComposeExampleApp(
     uiState: ComposeExampleUiState,
-    openGoogleInAppReview: () -> Unit,
+    openGoogleInAppReview: @Composable () -> Unit,
     dismissSnackbar: () -> Unit,
     finishActivity: () -> Unit,
 ) {
@@ -90,8 +93,15 @@ private fun NavigateBackIcon(finishActivity: () -> Unit) {
 @Composable
 fun ComposeExample(
     paddingValues: PaddingValues,
-    openGoogleInAppReview: () -> Unit,
+    openGoogleInAppReview: @Composable () -> Unit,
 ) {
+    var showDialog by remember {
+        mutableStateOf(false)
+    }
+    if (showDialog) {
+        openGoogleInAppReview()
+    }
+
     Column(
         modifier = Modifier
             .padding(paddingValues)
@@ -105,7 +115,14 @@ fun ComposeExample(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 20.dp),
-            onClick = { openGoogleInAppReview() },
+            onClick = {
+                showDialog = if (showDialog) {
+                    false
+                    //showDialog = true
+                } else {
+                    true
+                }
+            },
         ) {
             Text(text = stringResource(R.string.button_example_jetpack_compose))
         }
