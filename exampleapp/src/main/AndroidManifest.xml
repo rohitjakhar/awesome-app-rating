@@ -11,7 +11,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
         <activity
-            android:name="com.suddenh4x.ratingdialog.exampleapp.MainActivity"
+            android:name="com.rohitjakhar.ratingdialog.exampleapp.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,7 +20,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.suddenh4x.ratingdialog.exampleapp.composeexample.ComposeExampleActivity"
+            android:name="com.rohitjakhar.ratingdialog.exampleapp.composeexample.ComposeExampleActivity"
             android:exported="true" >
 
         </activity>

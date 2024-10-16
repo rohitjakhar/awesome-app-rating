@@ -2,10 +2,10 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: "de.mannodermaus.android-junit5"
 
-def version = "2.7.0"
+def version = "0.1.0-SNAPSHOT"
 
 android {
-    namespace 'com.suddenh4x.ratingdialog'
+    namespace 'com.rohitjakhar.ratingdialog'
     compileSdk 34
     defaultConfig {
         minSdkVersion 14
@@ -58,25 +58,25 @@ afterEvaluate {
 }
 
 ext {
-    PUBLISH_GROUP_ID = 'com.suddenh4x.ratingdialog'
+    PUBLISH_GROUP_ID = 'com.rohitjakhar.ratingdialog'
     PUBLISH_VERSION = "$version"
     PUBLISH_ARTIFACT_ID = 'awesome-app-rating'
     PUBLISH_DESCRIPTION = 'A highly customizable Android library providing a dialog, which asks the user to rate ' +
             'the app or give feedback. You can also use the library to show the Google in-app review easily under ' +
             'certain conditions.'
-    PUBLISH_URL = 'https://github.com/SuddenH4X/awesome-app-rating'
+    PUBLISH_URL = 'https://github.com/rohitjakhar/awesome-app-rating'
     PUBLISH_LICENSE_NAME = 'Apache License'
     PUBLISH_LICENSE_URL =
-            'https://github.com/SuddenH4X/awesome-app-rating/blob/master/LICENSE'
-    PUBLISH_DEVELOPER_ID = 'SuddenH4X'
-    PUBLISH_DEVELOPER_NAME = 'Sascha Kühne'
-    PUBLISH_DEVELOPER_EMAIL = 'SuddenH4X@users.noreply.github.com'
+            'https://github.com/rohitjakhar/awesome-app-rating/blob/master/LICENSE'
+    PUBLISH_DEVELOPER_ID = 'RohitJakhar'
+    PUBLISH_DEVELOPER_NAME = 'Rohit Jakhar'
+    PUBLISH_DEVELOPER_EMAIL = 'RohitJakhar940@gmail.com'
     PUBLISH_SCM_CONNECTION =
-            'scm:git:github.com/SuddenH4X/awesome-app-rating.git'
+            'scm:git:github.com/RohitJakhar/awesome-app-rating.git'
     PUBLISH_SCM_DEVELOPER_CONNECTION =
-            'scm:git:ssh://github.com:SuddenH4X/awesome-app-rating.git'
+            'scm:git:ssh://github.com:RohitJakhar/awesome-app-rating.git'
     PUBLISH_SCM_URL =
-            'https://github.com/SuddenH4X/awesome-app-rating/tree/master'
+            'https://github.com/RohitJakhar/awesome-app-rating/tree/master'
 }
 
 apply from: "${rootProject.projectDir}/scripts/publish-module.gradle"

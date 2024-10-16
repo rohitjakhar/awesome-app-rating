@@ -76,6 +76,20 @@ if (rootProject.ext.hasProperty("signing.keyId")) {
     println "signing.keyId not found in project."
 }
 
+task printData() {
+   doLast {
+//       name = rootProject.ext["signing.keyId"] ?: ""
+//       name1 = rootProject.ext["signing.password"]
+//       name2 = rootProject.ext["signing.secretKeyRingFile"]
+
+
+       println "key : ${rootProject.ext["signing.keyId"]}"
+       println "password : ${rootProject.ext["signing.password"]}"
+       println "file : ${rootProject.ext["signing.secretKeyRingFile"]}"
+   }
+
+}
+
 signing {
     sign publishing.publications
 }

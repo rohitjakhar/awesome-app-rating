@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace 'com.rohitjakhar.compose.ratingdialog'
+    namespace 'com.rohitjakhar.ratingdialog.compose'
     compileSdk 34
 
     defaultConfig {
@@ -40,6 +40,10 @@ android {
     }
 }
 
+afterEvaluate {
+    lint.dependsOn ktlintCheck
+}
+
 dependencies {
 
     implementation 'androidx.core:core-ktx:1.13.1'
@@ -60,3 +64,28 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
 }
+
+ext {
+    PUBLISH_GROUP_ID = 'com.rohitkakhar.ratingdialog.compose'
+    PUBLISH_VERSION = "$version"
+    PUBLISH_ARTIFACT_ID = 'awesome-app-rating'
+    PUBLISH_DESCRIPTION = 'A highly customizable Android library providing a dialog, which asks the user to rate ' +
+            'the app or give feedback. You can also use the library to show the Google in-app review easily under ' +
+            'certain conditions.'
+    PUBLISH_URL = 'https://github.com/rohitjakhar/awesome-app-rating'
+    PUBLISH_LICENSE_NAME = 'Apache License'
+    PUBLISH_LICENSE_URL =
+            'https://github.com/rohitjakhar/awesome-app-rating/blob/master/LICENSE'
+    PUBLISH_DEVELOPER_ID = 'RohitJakhar'
+    PUBLISH_DEVELOPER_NAME = 'Rohit Jakhar'
+    PUBLISH_DEVELOPER_EMAIL = 'RohitJakhar940@gmai.com'
+    PUBLISH_SCM_CONNECTION =
+            'scm:git:github.com/RohitJakhar/awesome-app-rating.git'
+    PUBLISH_SCM_DEVELOPER_CONNECTION =
+            'scm:git:ssh://github.com:RohitJakhar/awesome-app-rating.git'
+    PUBLISH_SCM_URL =
+            'https://github.com/RohitJakhar/awesome-app-rating/tree/master'
+}
+
+apply from: "${rootProject.projectDir}/scripts/publish-module.gradle"
+
