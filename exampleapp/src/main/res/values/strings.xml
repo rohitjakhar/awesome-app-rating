@@ -7,6 +7,9 @@
     <string name="text_example_google_in_app_review" translatable="false">This example uses the Google in-app review instead of the library
         dialog. Debug is enabled. (note: this example doesn\'t work at the moment because the example app hasn\'t been uploaded
         to the Google Play Store)</string>
+    <string name="text_example_config" translatable="false">
+        This example uses custom config for set all setting of review dialog at once.
+    </string>
     <string name="button_example_google_in_app_review" translatable="false">Google In-App Review</string>
     <string name="text_example_default" translatable="false">This example has no customizations. Debug is enabled.</string>
     <string name="button_example_default" translatable="false">Default</string>

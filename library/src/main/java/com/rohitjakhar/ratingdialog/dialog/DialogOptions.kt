@@ -15,8 +15,9 @@ internal class DialogOptions : Serializable {
 
     @Transient
     var iconDrawable: Drawable? = null
+    var iconUri: String? = null
     var customTheme: Int = 0
-    var rateLaterButton: RateButton = RateButton(R.string.rating_dialog_button_rate_later, null)
+    var rateLaterButton: RateButton = RateButton(R.string.rating_dialog_button_rate_later, null, null)
     var rateNeverButton: RateButton? = null
     var ratingThreshold: RatingThreshold = RatingThreshold.THREE
     var customCondition: (() -> Boolean)? = null
@@ -30,10 +31,12 @@ internal class DialogOptions : Serializable {
 
     @StringRes
     var titleTextId = R.string.rating_dialog_overview_title
+    var titleText: String? = null
 
     @StringRes
     var messageTextId: Int? = null
-    var confirmButton = ConfirmButton(R.string.rating_dialog_overview_button_confirm, null)
+    var messageText: String? = null
+    var confirmButton = ConfirmButton(R.string.rating_dialog_overview_button_confirm, null,null)
     var showOnlyFullStars = false
 
     /**
@@ -43,9 +46,12 @@ internal class DialogOptions : Serializable {
     @StringRes
     var storeRatingTitleTextId = R.string.rating_dialog_store_title
 
+    var storeRatingTitleText: String? = null
+
     @StringRes
     var storeRatingMessageTextId = R.string.rating_dialog_store_message
-    var rateNowButton: RateButton = RateButton(R.string.rating_dialog_store_button_rate_now, null)
+    var storeRatingMessageText: String? = null
+    var rateNowButton: RateButton = RateButton(R.string.rating_dialog_store_button_rate_now, null,null)
     var additionalRateNowButtonClickListener: RateDialogClickListener? = null
 
     /**
@@ -54,8 +60,9 @@ internal class DialogOptions : Serializable {
 
     @StringRes
     var feedbackTitleTextId = R.string.rating_dialog_feedback_title
+    var feedbackTitleText: String? = null
     var noFeedbackButton: RateButton =
-        RateButton(R.string.rating_dialog_feedback_button_cancel, null)
+        RateButton(R.string.rating_dialog_feedback_button_cancel, null, null)
 
     /**
      * rating dialog mail feedback
@@ -63,8 +70,9 @@ internal class DialogOptions : Serializable {
 
     @StringRes
     var mailFeedbackMessageTextId = R.string.rating_dialog_feedback_mail_message
+    var mailFeedbackMessageText: String? = null
     var mailFeedbackButton: RateButton =
-        RateButton(R.string.rating_dialog_feedback_mail_button_send, null)
+        RateButton(R.string.rating_dialog_feedback_mail_button_send, null, null)
     var mailSettings: MailSettings? = null
     var additionalMailFeedbackButtonClickListener: RateDialogClickListener? = null
 
@@ -76,8 +84,9 @@ internal class DialogOptions : Serializable {
 
     @StringRes
     var customFeedbackMessageTextId = R.string.rating_dialog_feedback_custom_message
+    var customFeedbackMessageText: String? = null
     var customFeedbackButton: CustomFeedbackButton =
-        CustomFeedbackButton(R.string.rating_dialog_feedback_custom_button_submit, null)
+        CustomFeedbackButton(R.string.rating_dialog_feedback_custom_button_submit, null, null)
 
     /**
      * other settings

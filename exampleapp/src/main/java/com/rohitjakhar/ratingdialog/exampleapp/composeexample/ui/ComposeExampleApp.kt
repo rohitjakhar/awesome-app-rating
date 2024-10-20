@@ -29,10 +29,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.rohitjakhar.ratingdialog.exampleapp.R
 import com.rohitjakhar.ratingdialog.exampleapp.composeexample.ComposeExampleUiState
 import com.rohitjakhar.ratingdialog.exampleapp.composeexample.composetheme.DarkColorScheme
 import com.rohitjakhar.ratingdialog.exampleapp.composeexample.composetheme.LightColorScheme
+import com.suddenh4x.ratingdialog.exampleapp.R
 
 @Composable
 fun ComposeExampleApp(

@@ -12,6 +12,7 @@ import android.widget.RatingBar
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.FragmentActivity
+import coil.load
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.rohitjakhar.ratingdialog.R
 import com.rohitjakhar.ratingdialog.buttons.RateButton
@@ -23,6 +24,13 @@ import com.rohitjakhar.ratingdialog.preferences.MailSettings
 import com.rohitjakhar.ratingdialog.preferences.PreferenceUtil
 import com.rohitjakhar.ratingdialog.preferences.toFloat
 import com.rohitjakhar.ratingdialog.utils.FeedbackUtils
+import com.rohitjakhar.ratingdialog.utils.setHint
+import com.rohitjakhar.ratingdialog.utils.setMessage
+import com.rohitjakhar.ratingdialog.utils.setNegativeButton
+import com.rohitjakhar.ratingdialog.utils.setPositiveButton
+import com.rohitjakhar.ratingdialog.utils.setText
+import com.rohitjakhar.ratingdialog.utils.setTitle
+
 
 @SuppressLint("InflateParams")
 internal object DialogManager {
@@ -36,13 +44,12 @@ internal object DialogManager {
         val inflater = activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val ratingOverviewDialogBinding = DialogRatingOverviewBinding.inflate(inflater)
         initializeRatingDialogIcon(activity, ratingOverviewDialogBinding.imageView, dialogOptions)
-        ratingOverviewDialogBinding.titleTextView.setText(dialogOptions.titleTextId)
-        showOverviewMessage(dialogOptions, ratingOverviewDialogBinding.messageTextView)
+        ratingOverviewDialogBinding.titleTextView.setText(dialogOptions.titleTextId, dialogOptions.titleText)
 
         builder.apply {
             setView(ratingOverviewDialogBinding.root)
 
-            setPositiveButton(dialogOptions.confirmButton.textId) { _, _ ->
+            setPositiveButton(dialogOptions.confirmButton.textId, dialogOptions.confirmButton.text) { _, _ ->
                 RatingLogger.debug(context.getString(R.string.rating_dialog_log_rating_overview_confirm_button_clicked))
                 dialogOptions.confirmButton.confirmButtonClickListener?.onClick(rating)
                     ?: RatingLogger.info(context.getString(R.string.rating_dialog_log_rating_overview_confirm_button_no_click_listener))
@@ -57,12 +64,14 @@ internal object DialogManager {
                         RatingLogger.info(context.getString(R.string.rating_dialog_log_rating_overview_below_threshold_with_custom_feedback))
                         PreferenceUtil.setDialogAgreed(context)
                         showRatingDialog(dialogOptions, DialogType.FEEDBACK_CUSTOM, activity)
+                        showOverviewMessage(dialogOptions, ratingOverviewDialogBinding.messageTextView)
                     }
 
                     else -> {
                         RatingLogger.info(context.getString(R.string.rating_dialog_log_rating_overview_below_threshold_without_custom_feedback))
                         PreferenceUtil.setDialogAgreed(context)
                         showRatingDialog(dialogOptions, DialogType.FEEDBACK_MAIL, activity)
+                        showOverviewMessage(dialogOptions, ratingOverviewDialogBinding.messageTextView)
                     }
                 }
             }
@@ -80,6 +89,12 @@ internal object DialogManager {
         dialogOptions.messageTextId?.let { messageTextId ->
             messageTextView.apply {
                 setText(messageTextId)
+                visibility = View.VISIBLE
+            }
+        }
+        dialogOptions.messageText?.let { messageTextId ->
+            messageTextView.apply {
+                text = messageTextId
                 visibility = View.VISIBLE
             }
         }
@@ -109,15 +124,15 @@ internal object DialogManager {
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val ratingStoreDialogBinding = DialogRatingStoreBinding.inflate(inflater)
         initializeRatingDialogIcon(context, ratingStoreDialogBinding.imageView, dialogOptions)
-        ratingStoreDialogBinding.storeRatingTitleTextView.setText(dialogOptions.storeRatingTitleTextId)
-        ratingStoreDialogBinding.storeRatingMessageTextView.setText(dialogOptions.storeRatingMessageTextId)
+        ratingStoreDialogBinding.storeRatingTitleTextView.setText(dialogOptions.storeRatingTitleTextId, dialogOptions.storeRatingTitleText)
+        ratingStoreDialogBinding.storeRatingMessageTextView.setText(dialogOptions.storeRatingMessageTextId, dialogOptions.storeRatingMessageText)
 
         builder.apply {
             setView(ratingStoreDialogBinding.root)
             setCancelable(dialogOptions.cancelable)
 
             dialogOptions.rateNowButton.let { button ->
-                setPositiveButton(button.textId) { _, _ ->
+                setPositiveButton(button.textId, button.text) { _, _ ->
                     RatingLogger.info(context.getString(R.string.rating_dialog_log_rating_store_rate_button_clicked))
                     PreferenceUtil.setDialogAgreed(context)
 
@@ -140,12 +155,12 @@ internal object DialogManager {
         val builder = getDialogBuilder(context, dialogOptions.customTheme)
 
         builder.apply {
-            setTitle(dialogOptions.feedbackTitleTextId)
-            setMessage(dialogOptions.mailFeedbackMessageTextId)
+            setTitle(dialogOptions.feedbackTitleTextId, dialogOptions.feedbackTitleText)
+            setMessage(dialogOptions.mailFeedbackMessageTextId, dialogOptions.mailFeedbackMessageText)
             setCancelable(dialogOptions.cancelable)
 
             dialogOptions.mailFeedbackButton.let { button ->
-                setPositiveButton(button.textId) { _, _ ->
+                setPositiveButton(button.textId, text = button.text) { _, _ ->
                     RatingLogger.info(context.getString(R.string.rating_dialog_log_mail_feedback_button_clicked))
 
                     button.rateDialogClickListener?.onClick()
@@ -175,15 +190,15 @@ internal object DialogManager {
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val ratingCustomFeedbackDialogBinding = DialogRatingCustomFeedbackBinding.inflate(inflater)
         val customFeedbackEditText = ratingCustomFeedbackDialogBinding.customFeedbackEditText
-        ratingCustomFeedbackDialogBinding.customFeedbackTitleTextView.setText(dialogOptions.feedbackTitleTextId)
-        customFeedbackEditText.setHint(dialogOptions.customFeedbackMessageTextId)
+        ratingCustomFeedbackDialogBinding.customFeedbackTitleTextView.setText(dialogOptions.feedbackTitleTextId, dialogOptions.feedbackTitleText)
+        customFeedbackEditText.setHint(dialogOptions.customFeedbackMessageTextId, dialogOptions.customFeedbackMessageText)
 
         builder.apply {
             setView(ratingCustomFeedbackDialogBinding.root)
             setCancelable(dialogOptions.cancelable)
 
             dialogOptions.customFeedbackButton.let { button ->
-                setPositiveButton(button.textId) { _, _ ->
+                setPositiveButton(button.textId, text = button.text) { _, _ ->
                     RatingLogger.info(context.getString(R.string.rating_dialog_log_custom_feedback_button_clicked))
 
                     val userFeedbackText = customFeedbackEditText.text.toString()
@@ -219,6 +234,10 @@ internal object DialogManager {
     }
 
     private fun initializeRatingDialogIcon(context: Context, imageView: ImageView, dialogOptions: DialogOptions) {
+        imageView.load(dialogOptions.iconUri) {
+            placeholder(dialogOptions.iconDrawable)
+            error(dialogOptions.iconDrawable)
+        }
         if (dialogOptions.iconDrawable != null) {
             RatingLogger.info(context.getString(R.string.rating_dialog_log_use_custom_rating_dialog_icon))
             imageView.setImageDrawable(dialogOptions.iconDrawable)
@@ -258,7 +277,7 @@ internal object DialogManager {
         }
 
         dialogOptions.rateNeverButton?.let { button ->
-            dialogBuilder.setNegativeButton(button.textId) { _, _ ->
+            dialogBuilder.setNegativeButton(button.textId, button.text) { _, _ ->
                 RatingLogger.info(context.getString(R.string.rating_dialog_log_rate_never_button_clicked))
                 PreferenceUtil.setDoNotShowAgain(context)
                 button.rateDialogClickListener?.onClick()
@@ -273,7 +292,7 @@ internal object DialogManager {
         dialogBuilder: AlertDialog.Builder,
     ) {
         noFeedbackButton.let { button ->
-            dialogBuilder.setNegativeButton(button.textId) { _, _ ->
+            dialogBuilder.setNegativeButton(button.textId, text = button.text) { _, _ ->
                 RatingLogger.info(context.getString(R.string.rating_dialog_log_no_feedback_button_clicked))
                 button.rateDialogClickListener?.onClick()
                     ?: RatingLogger.info(context.getString(R.string.rating_dialog_log_no_feedback_button_no_click_listener))

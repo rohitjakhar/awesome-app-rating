@@ -2,17 +2,44 @@ package com.rohitjakhar.ratingdialog.exampleapp
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.MutableLiveData
+import com.android.volley.Request
+import com.android.volley.Response
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
+import com.google.gson.Gson
 import com.rohitjakhar.ratingdialog.AppRating
+import com.rohitjakhar.ratingdialog.dialog.DialogConfigModel
 import com.rohitjakhar.ratingdialog.exampleapp.composeexample.ComposeExampleActivity
 import com.rohitjakhar.ratingdialog.preferences.MailSettings
 import com.rohitjakhar.ratingdialog.preferences.RatingThreshold
+import com.suddenh4x.ratingdialog.exampleapp.R
+import org.json.JSONObject
 
 class MainActivity : AppCompatActivity() {
+    private val queue by lazy { Volley.newRequestQueue(this) }
+    // paste your gist code here or alternate source.
+    private val url = "https://gist.githubusercontent.com/rohitjakhar/78615c0b82b5ca97aa738e1bda00f8a3/raw/awsomappconfig.json"
+    private val dataConfigModelFetchRequest by lazy {
+        JsonObjectRequest(
+            Request.Method.GET, url, null,
+            { response ->
+                // Parse response to DataModel
+                val dataModel = Gson().fromJson(response.toString(), DialogConfigModel::class.java)
+                showConfigDialog(dataModel)
+            },
+            { error ->
+                // Handle error
+                error.printStackTrace()
+            },
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -149,6 +176,19 @@ class MainActivity : AppCompatActivity() {
         AppRating.Builder(this)
             .setDebug(true)
             .setCustomTheme(R.style.AppTheme_CustomAlertDialog)
+            .showIfMeetsConditions()
+    }
+
+    fun onCustomConfigButtonClicked(@Suppress("UNUSED_PARAMETER") view: View) {
+        queue.add(dataConfigModelFetchRequest)
+    }
+
+    private fun showConfigDialog(dialogConfigModel: DialogConfigModel) {
+        AppRating.Builder(this)
+            .setDebug(true)
+            .setConfigConditions(
+                dialogConfigModel,
+            )
             .showIfMeetsConditions()
     }
 

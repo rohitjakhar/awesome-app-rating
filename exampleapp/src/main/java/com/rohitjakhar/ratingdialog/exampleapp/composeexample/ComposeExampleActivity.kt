@@ -27,8 +27,8 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.MutableLiveData
 import com.rohitjakhar.ratingdialog.compose.AppRatingCompose
 import com.rohitjakhar.ratingdialog.compose.preferences.MailSettings
-import com.rohitjakhar.ratingdialog.exampleapp.R
 import com.rohitjakhar.ratingdialog.compose.preferences.RatingThreshold
+import com.suddenh4x.ratingdialog.exampleapp.R
 
 class ComposeExampleActivity : ComponentActivity() {
 

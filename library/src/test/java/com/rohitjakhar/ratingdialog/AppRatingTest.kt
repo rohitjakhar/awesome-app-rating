@@ -10,6 +10,7 @@ import com.google.android.play.core.review.ReviewManagerFactory
 import com.rohitjakhar.ratingdialog.buttons.ConfirmButtonClickListener
 import com.rohitjakhar.ratingdialog.buttons.CustomFeedbackButtonClickListener
 import com.rohitjakhar.ratingdialog.buttons.RateDialogClickListener
+import com.rohitjakhar.ratingdialog.dialog.DialogConfigModel
 import com.rohitjakhar.ratingdialog.dialog.DialogOptions
 import com.rohitjakhar.ratingdialog.dialog.RateDialogFragment
 import com.rohitjakhar.ratingdialog.logging.RatingLogger
@@ -44,11 +45,13 @@ class AppRatingTest {
     @MockK
     lateinit var activity: AppCompatActivity
     internal lateinit var dialogOptions: DialogOptions
+    internal lateinit var dialogConfigModel: DialogConfigModel
 
     @BeforeEach
     fun setup() {
         RatingLogger.isLoggingEnabled = false
         dialogOptions = DialogOptions()
+        dialogConfigModel = DialogConfigModel()
         unmockkAll()
         every { activity.getString(any()) } returns ""
         every { activity.getString(any(), any()) } returns ""
@@ -558,6 +561,13 @@ class AppRatingTest {
         val context = mockk<Context>()
         AppRating.openPlayStoreListing(context)
         verify(exactly = 1) { FeedbackUtils.openPlayStoreListing(context) }
+    }
+
+    @Test
+    fun `test data config setting`() {
+        dialogConfigModel.countOfLaterButtonClicksToShowNeverButton = 34
+        getBuilder().applyCondition(dialogConfigModel)
+        assertThat(dialogOptions.countOfLaterButtonClicksToShowNeverButton).isEqualTo(34)
     }
 
     private fun getBuilder() = AppRating.Builder(activity, dialogOptions)

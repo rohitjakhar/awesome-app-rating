@@ -12,6 +12,7 @@ import com.rohitjakhar.ratingdialog.buttons.ConfirmButtonClickListener
 import com.rohitjakhar.ratingdialog.buttons.CustomFeedbackButtonClickListener
 import com.rohitjakhar.ratingdialog.buttons.RateButton
 import com.rohitjakhar.ratingdialog.buttons.RateDialogClickListener
+import com.rohitjakhar.ratingdialog.dialog.DialogConfigModel
 import com.rohitjakhar.ratingdialog.dialog.DialogOptions
 import com.rohitjakhar.ratingdialog.dialog.RateDialogFragment
 import com.rohitjakhar.ratingdialog.logging.RatingLogger
@@ -20,6 +21,7 @@ import com.rohitjakhar.ratingdialog.preferences.MailSettings
 import com.rohitjakhar.ratingdialog.preferences.PreferenceUtil
 import com.rohitjakhar.ratingdialog.preferences.RatingThreshold
 import com.rohitjakhar.ratingdialog.preferences.toFloat
+import com.rohitjakhar.ratingdialog.preferences.toRatingThreshold
 import com.rohitjakhar.ratingdialog.utils.FeedbackUtils
 
 object AppRating {
@@ -45,6 +47,7 @@ object AppRating {
         internal var isDebug = false
         internal var reviewManager: ReviewManager? = null
         private var dialogOptions = DialogOptions()
+        private var dialogConfigModel: DialogConfigModel? = null
 
         internal constructor(componentActivity: ComponentActivity, dialogOptions: DialogOptions) : this(componentActivity) {
             this.dialogOptions = dialogOptions
@@ -68,11 +71,67 @@ object AppRating {
             dialogOptions.rateLaterButton.rateDialogClickListener = rateLaterButtonClickListener
         }
 
+        fun setConfigConditions(dialogConfigModel: DialogConfigModel) = apply{
+            applyCondition(dialogConfigModel)
+        }
+
+        fun applyCondition(dialogConfigModel: DialogConfigModel) {
+            dialogConfigModel.ratingThreshold?.toFloat()?.let {
+                setRatingThreshold(it.toFloat())
+            }
+            dialogConfigModel.countAppLaunch?.let {
+                dialogOptions.countAppLaunch = it
+                RatingLogger.debug(componentActivity.getString(R.string.rating_dialog_log_dont_count_app_launch))
+            }
+            dialogConfigModel.cancelable?.let {
+                dialogOptions.cancelable = it
+                setCancelable(it)
+            }
+            dialogConfigModel.useCustomFeedback?.let {
+                dialogOptions.useCustomFeedback = it
+                setUseCustomFeedback(it)
+            }
+            dialogConfigModel.minimumDays?.let {
+                setMinimumDays(it)
+            }
+
+            dialogConfigModel.countOfLaterButtonClicksToShowNeverButton?.let {
+                dialogOptions.countOfLaterButtonClicksToShowNeverButton = it
+            }
+            dialogOptions.confirmButton.text = dialogConfigModel.confirmButtonText
+            dialogOptions.customFeedbackMessageText = dialogConfigModel.customFeedbackButtonText
+            dialogOptions.feedbackTitleText = dialogConfigModel.feedbackTitleText
+            dialogOptions.messageText = dialogConfigModel.messageText
+            dialogOptions.rateLaterButton.text = dialogConfigModel.rateLaterButtonText
+            dialogOptions.storeRatingMessageText = dialogConfigModel.storeRatingMessageText
+            dialogOptions.storeRatingTitleText = dialogConfigModel.storeRatingTitleText
+            dialogOptions.titleText = dialogConfigModel.titleText
+            dialogOptions.iconUri = dialogConfigModel.iconUri
+            dialogConfigModel.useCustomFeedback?.let {
+                setUseCustomFeedback(it)
+            }
+            dialogConfigModel.mailSetting?.let {
+                dialogOptions.mailSettings = it
+                setMailSettingsForFeedbackDialog(it)
+            }
+
+            dialogConfigModel.minimumLaunchTimes?.let {
+                setMinimumLaunchTimes(it)
+            }
+            dialogConfigModel.showFullStarOnly?.let {
+                dialogOptions.showOnlyFullStars = true
+                setShowOnlyFullStars(it)
+            }
+            dialogConfigModel.useGoogleInAppReview?.let {
+                dialogOptions.useGoogleInAppReview = it
+            }
+        }
+
         fun showRateNeverButton(
             @StringRes rateNeverButtonTextId: Int = R.string.rating_dialog_button_rate_never,
             rateNeverButtonClickListener: RateDialogClickListener? = null,
         ) = apply {
-            dialogOptions.rateNeverButton = RateButton(rateNeverButtonTextId, rateNeverButtonClickListener)
+            dialogOptions.rateNeverButton = RateButton(rateNeverButtonTextId, null, rateNeverButtonClickListener)
             RatingLogger.debug(componentActivity.getString(R.string.rating_dialog_log_show_rate_never_button))
         }
 
@@ -81,7 +140,7 @@ object AppRating {
             rateNeverButtonClickListener: RateDialogClickListener? = null,
             countOfLaterButtonClicks: Int,
         ) = apply {
-            dialogOptions.rateNeverButton = RateButton(rateNeverButtonTextId, rateNeverButtonClickListener)
+            dialogOptions.rateNeverButton = RateButton(rateNeverButtonTextId, null, rateNeverButtonClickListener)
             dialogOptions.countOfLaterButtonClicksToShowNeverButton = countOfLaterButtonClicks
             RatingLogger.debug(componentActivity.getString(R.string.rating_dialog_log_show_rate_never_button_later, countOfLaterButtonClicks))
         }
@@ -201,6 +260,11 @@ object AppRating {
         fun setRatingThreshold(ratingThreshold: RatingThreshold) = apply {
             dialogOptions.ratingThreshold = ratingThreshold
             RatingLogger.debug(componentActivity.getString(R.string.rating_dialog_log_set_rating_threshold, ratingThreshold.toFloat()))
+        }
+
+        fun setRatingThreshold(ratingThreshold: Float) = apply {
+            dialogOptions.ratingThreshold = ratingThreshold.toRatingThreshold()
+            RatingLogger.debug(componentActivity.getString(R.string.rating_dialog_log_set_rating_threshold, ratingThreshold.toInt()))
         }
 
         fun setCancelable(cancelable: Boolean) = apply {
