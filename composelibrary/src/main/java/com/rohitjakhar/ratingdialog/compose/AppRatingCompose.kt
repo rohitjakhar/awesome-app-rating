@@ -71,7 +71,7 @@ object AppRatingCompose {
             @StringRes rateNeverButtonTextId: Int = R.string.rating_dialog_button_rate_never,
             rateNeverButtonClickListener: RateDialogClickListener? = null,
         ) = apply {
-            dialogOptions.rateNeverButton = RateButton(rateNeverButtonTextId, rateNeverButtonClickListener)
+            dialogOptions.rateNeverButton = RateButton(rateNeverButtonTextId, null, rateNeverButtonClickListener)
             RatingLogger.debug(componentActivity.getString(R.string.rating_dialog_log_show_rate_never_button))
         }
 
@@ -80,7 +80,7 @@ object AppRatingCompose {
             rateNeverButtonClickListener: RateDialogClickListener? = null,
             countOfLaterButtonClicks: Int,
         ) = apply {
-            dialogOptions.rateNeverButton = RateButton(rateNeverButtonTextId, rateNeverButtonClickListener)
+            dialogOptions.rateNeverButton = RateButton(rateNeverButtonTextId, null, rateNeverButtonClickListener)
             dialogOptions.countOfLaterButtonClicksToShowNeverButton = countOfLaterButtonClicks
             RatingLogger.debug(componentActivity.getString(R.string.rating_dialog_log_show_rate_never_button_later, countOfLaterButtonClicks))
         }
