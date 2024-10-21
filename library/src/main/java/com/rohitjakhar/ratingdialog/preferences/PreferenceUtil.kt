@@ -14,7 +14,7 @@ internal object PreferenceUtil {
     private const val PREF_KEY_MINIMUM_LAUNCH_TIMES = "minimum_launch_times"
     private const val PREF_KEY_MINIMUM_LAUNCH_TIMES_TO_SHOW_AGAIN =
         "minimum_launch_times_to_show_again"
-    private const val PREF_KEY_MINIMUM_DAYS = "minimum_days"
+    private const val  PREF_KEY_MINIMUM_DAYS = "minimum_days"
     private const val PREF_KEY_MINIMUM_DAYS_TO_SHOW_AGAIN = "minimum_days_to_show_again"
     private const val PREF_KEY_DIALOG_AGREED = "dialog_agreed"
     private const val PREF_KEY_DIALOG_SHOW_LATER = "dialog_show_later"

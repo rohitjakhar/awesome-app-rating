@@ -12,6 +12,7 @@ import com.rohitjakhar.ratingdialog.compose.buttons.ConfirmButtonClickListener
 import com.rohitjakhar.ratingdialog.compose.buttons.CustomFeedbackButtonClickListener
 import com.rohitjakhar.ratingdialog.compose.buttons.RateButton
 import com.rohitjakhar.ratingdialog.compose.buttons.RateDialogClickListener
+import com.rohitjakhar.ratingdialog.compose.dialog.DialogConfigModel
 import com.rohitjakhar.ratingdialog.compose.dialog.DialogOptions
 import com.rohitjakhar.ratingdialog.compose.dialog.RateDialogCompose
 import com.rohitjakhar.ratingdialog.compose.dialog.RateDialogFragment
@@ -21,6 +22,7 @@ import com.rohitjakhar.ratingdialog.compose.preferences.MailSettings
 import com.rohitjakhar.ratingdialog.compose.preferences.PreferenceUtil
 import com.rohitjakhar.ratingdialog.compose.preferences.RatingThreshold
 import com.rohitjakhar.ratingdialog.compose.preferences.toFloat
+import com.rohitjakhar.ratingdialog.compose.preferences.toRatingThreshold
 import com.rohitjakhar.ratingdialog.compose.utils.FeedbackUtils
 
 object AppRatingCompose {
@@ -200,6 +202,11 @@ object AppRatingCompose {
             RatingLogger.debug(componentActivity.getString(R.string.rating_dialog_log_set_rating_threshold, ratingThreshold.toFloat()))
         }
 
+        fun setRatingThreshold(ratingThreshold: Float) = apply {
+            dialogOptions.ratingThreshold = ratingThreshold.toRatingThreshold()
+            RatingLogger.debug(componentActivity.getString(R.string.rating_dialog_log_set_rating_threshold, ratingThreshold.toFloat()))
+        }
+
         fun setCancelable(cancelable: Boolean) = apply {
             dialogOptions.cancelable = cancelable
             RatingLogger.debug(componentActivity.getString(R.string.rating_dialog_log_set_cancelable, cancelable))
@@ -271,6 +278,63 @@ object AppRatingCompose {
         fun setGoogleInAppReviewCompleteListener(googleInAppReviewCompleteListener: (Boolean) -> Unit) = apply {
             dialogOptions.googleInAppReviewCompleteListener = googleInAppReviewCompleteListener
         }
+
+        fun setConfigConditions(dialogConfigModel: DialogConfigModel) = apply{
+            applyCondition(dialogConfigModel)
+        }
+
+        private fun applyCondition(dialogConfigModel: DialogConfigModel) {
+            dialogConfigModel.ratingThreshold?.toFloat()?.let {
+                setRatingThreshold(it.toFloat())
+            }
+            dialogConfigModel.countAppLaunch?.let {
+                dialogOptions.countAppLaunch = it
+                RatingLogger.debug(componentActivity.getString(R.string.rating_dialog_log_dont_count_app_launch))
+            }
+            dialogConfigModel.cancelable?.let {
+                dialogOptions.cancelable = it
+                setCancelable(it)
+            }
+            dialogConfigModel.useCustomFeedback?.let {
+                dialogOptions.useCustomFeedback = it
+                setUseCustomFeedback(it)
+            }
+            dialogConfigModel.minimumDays?.let {
+                setMinimumDays(it)
+            }
+
+            dialogConfigModel.countOfLaterButtonClicksToShowNeverButton?.let {
+                dialogOptions.countOfLaterButtonClicksToShowNeverButton = it
+            }
+            dialogOptions.confirmButton.text = dialogConfigModel.confirmButtonText
+            dialogOptions.customFeedbackMessageText = dialogConfigModel.customFeedbackButtonText
+            dialogOptions.feedbackTitleText = dialogConfigModel.feedbackTitleText
+            dialogOptions.messageText = dialogConfigModel.messageText
+            dialogOptions.rateLaterButton.text = dialogConfigModel.rateLaterButtonText
+            dialogOptions.storeRatingMessageText = dialogConfigModel.storeRatingMessageText
+            dialogOptions.storeRatingTitleText = dialogConfigModel.storeRatingTitleText
+            dialogOptions.titleText = dialogConfigModel.titleText
+            dialogOptions.iconUri = dialogConfigModel.iconUri
+            dialogConfigModel.useCustomFeedback?.let {
+                setUseCustomFeedback(it)
+            }
+            dialogConfigModel.mailSetting?.let {
+                dialogOptions.mailSettings = it
+                setMailSettingsForFeedbackDialog(it)
+            }
+
+            dialogConfigModel.minimumLaunchTimes?.let {
+                setMinimumLaunchTimes(it)
+            }
+            dialogConfigModel.showFullStarOnly?.let {
+                dialogOptions.showOnlyFullStars = true
+                setShowOnlyFullStars(it)
+            }
+            dialogConfigModel.useGoogleInAppReview?.let {
+                dialogOptions.useGoogleInAppReview = it
+            }
+        }
+
 
         /**
          * This method will return null if the in-app review from Google is used.

@@ -38,6 +38,7 @@ class ComposeExampleActivity : ComponentActivity() {
         setContent {
             // State variables to manage which composable to show
             var showInAppReview by remember { mutableStateOf(false) }
+            var showCustomConfig by remember { mutableStateOf(false) }
             var showDefault by remember { mutableStateOf(false) }
             var showCustomIcon by remember { mutableStateOf(false) }
             var showMailFeedback by remember { mutableStateOf(false) }
@@ -103,6 +104,9 @@ class ComposeExampleActivity : ComponentActivity() {
                 showCancelable -> {
                     OnCancelableButtonClicked()
                 }
+                showCustomConfig -> {
+
+                }
             }
 
             Scaffold(
@@ -126,6 +130,14 @@ class ComposeExampleActivity : ComponentActivity() {
                     )
                     Button(onClick = { onResetButtonClicked() }, modifier = Modifier.fillMaxWidth()) {
                         Text(text = stringResource(id = R.string.button_example_reset))
+                    }
+
+                    Text(
+                        text = stringResource(id = R.string.text_example_config),
+                        style = MaterialTheme.typography.bodyMedium,
+                    )
+                    Button(onClick = { showInAppReview = true }, modifier = Modifier.fillMaxWidth()) {
+                        Text(text = stringResource(id = R.string.button_example_custom_config))
                     }
 
                     Text(
@@ -335,6 +347,13 @@ class ComposeExampleActivity : ComponentActivity() {
             .setDebug(true)
             .setShowOnlyFullStars(true)
             .showIfMeetsConditions()
+    }
+
+    @Composable
+    private fun OnCustomConfigClicked() {
+        AppRatingCompose.Builder(this)
+            .setDebug(false)
+
     }
 
     @Composable

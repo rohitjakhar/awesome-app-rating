@@ -11,6 +11,7 @@
         This example uses custom config for set all setting of review dialog at once.
     </string>
     <string name="button_example_google_in_app_review" translatable="false">Google In-App Review</string>
+    <string name="button_example_custom_config" translatable="false">Custom Config</string>
     <string name="text_example_default" translatable="false">This example has no customizations. Debug is enabled.</string>
     <string name="button_example_default" translatable="false">Default</string>
     <string name="text_example_custom_icon" translatable="false">In this example the default icon (app icon) has been replaced with a cusom icon.
