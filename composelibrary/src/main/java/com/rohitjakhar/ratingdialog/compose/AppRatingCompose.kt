@@ -360,8 +360,12 @@ object AppRatingCompose {
                     RatingLogger.debug(componentActivity.getString(R.string.rating_dialog_log_show_library_dialog))
                     RateDialogCompose(
                         dialogOptions = dialogOptions,
-                        onDismissRequest = {},
-                        onRatingSelected = {}
+                        onDismissRequest = {
+                            dialogOptions.dialogCancelListener?.invoke()
+                        },
+                        onRatingSelected = {
+                            dialogOptions.dialogCancelListener?.invoke()
+                        }
                     )
                 }
             }

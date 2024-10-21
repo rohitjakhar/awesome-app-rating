@@ -1,6 +1,7 @@
 package com.rohitjakhar.ratingdialog.exampleapp.composeexample
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -25,12 +26,34 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.MutableLiveData
+import com.android.volley.Request
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
+import com.google.gson.Gson
 import com.rohitjakhar.ratingdialog.compose.AppRatingCompose
 import com.rohitjakhar.ratingdialog.compose.preferences.MailSettings
 import com.rohitjakhar.ratingdialog.compose.preferences.RatingThreshold
+import com.rohitjakhar.ratingdialog.dialog.DialogConfigModel
 import com.suddenh4x.ratingdialog.exampleapp.R
 
 class ComposeExampleActivity : ComponentActivity() {
+
+    private val queue by lazy { Volley.newRequestQueue(this) }
+    // paste your gist code here or alternate source.
+    private val url = "https://gist.githubusercontent.com/rohitjakhar/78615c0b82b5ca97aa738e1bda00f8a3/raw/awsomappconfig.json"
+    private val dataConfigModelFetchRequest by lazy {
+        JsonObjectRequest(
+            Request.Method.GET, url, null, { response ->
+                // Parse response to DataModel
+                val dataModel = Gson().fromJson(response.toString(), DialogConfigModel::class.java)
+                //showConfigDialog(dataModel)
+            },
+            { error ->
+                // Handle error
+                error.printStackTrace()
+            },
+        )
+    }
 
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,55 +77,81 @@ class ComposeExampleActivity : ComponentActivity() {
 
             when {
                 showInAppReview -> {
-                    OnGoogleInAppReviewExampleButtonClicked()
+                    OnGoogleInAppReviewExampleButtonClicked {
+                        showInAppReview = false
+                    }
                 }
 
                 showDefault -> {
-                    OnDefaultExampleButtonClicked()
+                    OnDefaultExampleButtonClicked {
+                        showDefault = false
+                    }
                 }
 
                 showCustomIcon -> {
-                    OnCustomIconButtonClicked()
+                    OnCustomIconButtonClicked {
+                        showCustomIcon = false
+                    }
                 }
 
                 showCustomTheme -> {
-                    OnCustomThemeButtonClicked()
+                    OnCustomThemeButtonClicked {
+                        showCustomTheme = false
+                    }
                 }
 
                 showMailFeedback -> {
-                    OnMailFeedbackButtonClicked()
+                    OnMailFeedbackButtonClicked {
+                        showMailFeedback = false
+                    }
                 }
 
                 showCustomFeedback -> {
-                    OnCustomFeedbackButtonClicked()
+                    OnCustomFeedbackButtonClicked {
+                        showCustomFeedback = false
+                    }
                 }
 
                 showShowNever -> {
-                    OnShowNeverButtonClicked()
+                    OnShowNeverButtonClicked {
+                        showShowNever = false
+                    }
                 }
 
                 showNeverAfterThreeTimes -> {
-                    OnShowNeverButtonAfterThreeTimesClicked()
+                    OnShowNeverButtonAfterThreeTimesClicked {
+                        showNeverAfterThreeTimes = false
+                    }
                 }
 
                 showOnThirdClick -> {
-                    OnShowOnThirdClickButtonClicked()
+                    OnShowOnThirdClickButtonClicked {
+                        showOnThirdClick = false
+                    }
                 }
 
                 showRatingThreshold -> {
-                    OnRatingThresholdButtonClicked()
+                    OnRatingThresholdButtonClicked {
+                        showRatingThreshold = false
+                    }
                 }
 
                 showFullStarRating -> {
-                    OnFullStarRatingButtonClicked()
+                    OnFullStarRatingButtonClicked {
+                        showFullStarRating = false
+                    }
                 }
 
                 showCustomTexts -> {
-                    OnCustomTextsButtonClicked()
+                    OnCustomTextsButtonClicked {
+                        showCustomTexts = false
+                    }
                 }
 
                 showCancelable -> {
-                    OnCancelableButtonClicked()
+                    OnCancelableButtonClicked {
+                        showCancelable = false
+                    }
                 }
                 showCustomConfig -> {
 
@@ -254,37 +303,52 @@ class ComposeExampleActivity : ComponentActivity() {
     }
 
     @Composable
-    private fun OnGoogleInAppReviewExampleButtonClicked() {
+    private fun OnGoogleInAppReviewExampleButtonClicked(onClose: () -> Unit) {
         AppRatingCompose.Builder(this)
             .useGoogleInAppReview()
             .setGoogleInAppReviewCompleteListener { successful ->
                 toastLiveData.postValue("Google in-app review completed (successful: $successful)")
+            }
+            .setDialogCancelListener {
+                toastLiveData.postValue("Dialog was canceled.")
+                onClose.invoke()
             }
             .setDebug(true)
             .showIfMeetsConditions()
     }
 
     @Composable
-    private fun OnDefaultExampleButtonClicked() {
+    private fun OnDefaultExampleButtonClicked(onClose: () -> Unit) {
         AppRatingCompose.Builder(this)
             .setDebug(true)
+            .setDialogCancelListener {
+                toastLiveData.postValue("Dialog was canceled.")
+                onClose.invoke()
+            }
             .showIfMeetsConditions()
     }
 
     @Composable
-    private fun OnCustomIconButtonClicked() {
+    private fun OnCustomIconButtonClicked(onClose: () -> Unit) {
         val iconDrawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_star_black, null)
-
         AppRatingCompose.Builder(this)
             .setDebug(true)
             .setIconDrawable(iconDrawable)
+            .setDialogCancelListener {
+                toastLiveData.postValue("Dialog was canceled.")
+                onClose.invoke()
+            }
             .showIfMeetsConditions()
     }
 
     @Composable
-    private fun OnMailFeedbackButtonClicked() {
+    private fun OnMailFeedbackButtonClicked(onClose: () -> Unit) {
         AppRatingCompose.Builder(this)
             .setDebug(true)
+            .setDialogCancelListener {
+                toastLiveData.postValue("Dialog was canceled.")
+                onClose.invoke()
+            }
             .setMailSettingsForFeedbackDialog(
                 MailSettings(
                     "info@your-app.de",
@@ -296,10 +360,14 @@ class ComposeExampleActivity : ComponentActivity() {
     }
 
     @Composable
-    private fun OnCustomFeedbackButtonClicked() {
+    private fun OnCustomFeedbackButtonClicked(onClose: () -> Unit) {
         AppRatingCompose.Builder(this)
             .setDebug(true)
             .setUseCustomFeedback(true)
+            .setDialogCancelListener {
+                toastLiveData.postValue("Dialog was canceled.")
+                onClose.invoke()
+            }
             .setCustomFeedbackButtonClickListener { userFeedbackText ->
                 toastLiveData.postValue("Feedback: $userFeedbackText")
             }
@@ -307,57 +375,81 @@ class ComposeExampleActivity : ComponentActivity() {
     }
 
     @Composable
-    private fun OnShowNeverButtonClicked() {
+    private fun OnShowNeverButtonClicked(onClose: () -> Unit) {
         AppRatingCompose.Builder(this)
             .setDebug(true)
+            .setDialogCancelListener {
+                toastLiveData.postValue("Dialog was canceled.")
+                onClose.invoke()
+            }
             .showRateNeverButton()
             .showIfMeetsConditions()
     }
 
     @Composable
-    private fun OnShowNeverButtonAfterThreeTimesClicked() {
+    private fun OnShowNeverButtonAfterThreeTimesClicked(onClose: () -> Unit) {
         AppRatingCompose.Builder(this)
             .setDebug(true)
+            .setDialogCancelListener {
+                toastLiveData.postValue("Dialog was canceled.")
+                onClose.invoke()
+            }
             .showRateNeverButtonAfterNTimes(countOfLaterButtonClicks = 3)
             .showIfMeetsConditions()
     }
 
     @Composable
-    private fun OnShowOnThirdClickButtonClicked() {
+    private fun OnShowOnThirdClickButtonClicked(onClose: () -> Unit) {
         AppRatingCompose.Builder(this)
             .showRateNeverButton()
             .setMinimumLaunchTimes(3)
             .setMinimumDays(0)
             .setMinimumLaunchTimesToShowAgain(5)
             .setMinimumDaysToShowAgain(0)
+            .setDialogCancelListener {
+                toastLiveData.postValue("Dialog was canceled.")
+                onClose.invoke()
+            }
             .showIfMeetsConditions()
     }
 
     @Composable
-    private fun OnRatingThresholdButtonClicked() {
+    private fun OnRatingThresholdButtonClicked(onClose: () -> Unit) {
         AppRatingCompose.Builder(this)
             .setDebug(true)
             .setRatingThreshold(RatingThreshold.FOUR_AND_A_HALF)
+            .setDialogCancelListener {
+                toastLiveData.postValue("Dialog was canceled.")
+                onClose.invoke()
+            }
             .showIfMeetsConditions()
     }
 
     @Composable
-    private fun OnFullStarRatingButtonClicked() {
+    private fun OnFullStarRatingButtonClicked(onClose: () -> Unit) {
         AppRatingCompose.Builder(this)
             .setDebug(true)
             .setShowOnlyFullStars(true)
+            .setDialogCancelListener {
+                toastLiveData.postValue("Dialog was canceled.")
+                onClose.invoke()
+            }
             .showIfMeetsConditions()
     }
 
     @Composable
-    private fun OnCustomConfigClicked() {
+    private fun OnCustomConfigClicked(onClose: () -> Unit) {
         AppRatingCompose.Builder(this)
+            .setDialogCancelListener {
+                toastLiveData.postValue("Dialog was canceled.")
+                onClose.invoke()
+            }
             .setDebug(false)
 
     }
 
     @Composable
-    private fun OnCustomTextsButtonClicked() {
+    private fun OnCustomTextsButtonClicked(onClose: () -> Unit) {
         AppRatingCompose.Builder(this)
             .setDebug(true)
             .setRateNowButtonTextId(R.string.button_rate_now)
@@ -372,23 +464,34 @@ class ComposeExampleActivity : ComponentActivity() {
             .setMailFeedbackMessageTextId(R.string.message_feedback)
             .setMailFeedbackButtonTextId(R.string.button_mail_feedback)
             .setNoFeedbackButtonTextId(R.string.button_no_feedback)
+            .setDialogCancelListener {
+                toastLiveData.postValue("Dialog was canceled.")
+                onClose.invoke()
+            }
             .showIfMeetsConditions()
     }
 
     @Composable
-    private fun OnCancelableButtonClicked() {
+    private fun OnCancelableButtonClicked(onClose: () -> Unit) {
         AppRatingCompose.Builder(this)
             .setDebug(true)
             .setCancelable(true)
-            .setDialogCancelListener { toastLiveData.postValue("Dialog was canceled.") }
+            .setDialogCancelListener {
+                onClose.invoke()
+                toastLiveData.postValue("Dialog was canceled.")
+            }
             .showIfMeetsConditions()
     }
 
     @Composable
-    private fun OnCustomThemeButtonClicked() {
+    private fun OnCustomThemeButtonClicked(onClose: () -> Unit) {
         AppRatingCompose.Builder(this)
             .setDebug(true)
             .setCustomTheme(R.style.AppTheme_CustomAlertDialog)
+            .setDialogCancelListener {
+                toastLiveData.postValue("Dialog was canceled.")
+                onClose.invoke()
+            }
             .showIfMeetsConditions()
     }
 
