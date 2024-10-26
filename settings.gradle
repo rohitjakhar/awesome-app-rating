@@ -1,4 +1,6 @@
+rootProject.name = 'Awesome App Rating'
+
 include ':library'
 include ':exampleapp'
 include ':composelibrary'
-rootProject.name = 'Awesome App Rating'
+include ':core'

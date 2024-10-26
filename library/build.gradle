@@ -8,7 +8,7 @@ android {
     namespace 'com.rohitjakhar.ratingdialog'
     compileSdk 34
     defaultConfig {
-        minSdkVersion 14
+        minSdkVersion 21
         targetSdkVersion 34
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -37,6 +37,7 @@ android {
 def junitVersion = "5.10.0"
 
 dependencies {
+    api project(':core')
     implementation 'androidx.annotation:annotation:1.6.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'

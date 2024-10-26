@@ -5,8 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
-import com.rohitjakhar.ratingdialog.logging.RatingLogger
-import com.rohitjakhar.ratingdialog.preferences.MailSettings
+import com.rohitjakhar.core.utils.FeedbackUtils
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
@@ -31,7 +30,7 @@ class FeedbackUtilsTest {
 
     @BeforeEach
     fun setup() {
-        RatingLogger.isLoggingEnabled = false
+        com.rohitjakhar.core.logging.RatingLogger.isLoggingEnabled = false
         mockkStatic(Uri::class)
         every { Uri.parse(any()) } returns uri
         every { context.getString(any()) } returns ""
@@ -128,6 +127,11 @@ class FeedbackUtilsTest {
 
     companion object {
         private const val PACKAGE_NAME = "com.suddenh4x.unittest"
-        private val mailSettings = MailSettings("address", "subject", "message", "errorToast")
+        private val mailSettings = com.rohitjakhar.core.preferences.MailSettings(
+            "address",
+            "subject",
+            "message",
+            "errorToast"
+        )
     }
 }

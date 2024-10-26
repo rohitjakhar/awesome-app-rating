@@ -14,15 +14,17 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.FragmentActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.rohitjakhar.ratingdialog.compose.R
-import com.rohitjakhar.ratingdialog.compose.buttons.RateButton
+import com.rohitjakhar.core.buttons.RateButton
+import com.rohitjakhar.core.dialog.DialogOptions
+import com.rohitjakhar.core.dialog.DialogType
+import com.rohitjakhar.core.logging.RatingLogger
+import com.rohitjakhar.core.preferences.MailSettings
+import com.rohitjakhar.core.preferences.PreferenceUtil
+import com.rohitjakhar.core.preferences.toFloat
+import com.rohitjakhar.core.utils.FeedbackUtils
 import com.rohitjakhar.ratingdialog.compose.databinding.DialogRatingCustomFeedbackBinding
 import com.rohitjakhar.ratingdialog.compose.databinding.DialogRatingOverviewBinding
 import com.rohitjakhar.ratingdialog.compose.databinding.DialogRatingStoreBinding
-import com.rohitjakhar.ratingdialog.compose.logging.RatingLogger
-import com.rohitjakhar.ratingdialog.compose.preferences.MailSettings
-import com.rohitjakhar.ratingdialog.compose.preferences.PreferenceUtil
-import com.rohitjakhar.ratingdialog.compose.preferences.toFloat
-import com.rohitjakhar.ratingdialog.compose.utils.FeedbackUtils
 
 @SuppressLint("InflateParams")
 internal object DialogManager {

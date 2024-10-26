@@ -1,5 +1,7 @@
 package com.rohitjakhar.ratingdialog.preferences
 
+import com.rohitjakhar.core.preferences.RatingThreshold
+import com.rohitjakhar.core.preferences.toFloat
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 

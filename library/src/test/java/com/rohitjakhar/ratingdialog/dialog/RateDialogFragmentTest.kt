@@ -3,8 +3,8 @@ package com.rohitjakhar.ratingdialog.dialog
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AlertDialog
-import com.rohitjakhar.ratingdialog.logging.RatingLogger
-import com.rohitjakhar.ratingdialog.preferences.PreferenceUtil
+import com.rohitjakhar.core.dialog.DialogOptions
+import com.rohitjakhar.core.dialog.DialogType
 import io.mockk.Runs
 import io.mockk.clearAllMocks
 import io.mockk.every
@@ -39,7 +39,7 @@ class RateDialogFragmentTest {
 
     @BeforeEach
     fun setup() {
-        RatingLogger.isLoggingEnabled = false
+        com.rohitjakhar.core.logging.RatingLogger.isLoggingEnabled = false
         mockkObject(DialogManager)
         mockkStatic(Log::class)
 
@@ -122,9 +122,9 @@ class RateDialogFragmentTest {
 
         @BeforeEach
         fun setup() {
-            mockkObject(PreferenceUtil)
+            mockkObject(com.rohitjakhar.core.preferences.PreferenceUtil)
             rateDialogFragmentSpy.dialogOptions = dialogOptions
-            every { PreferenceUtil.onLaterButtonClicked(any()) } just Runs
+            every { com.rohitjakhar.core.preferences.PreferenceUtil.onLaterButtonClicked(any()) } just Runs
             every { dialogOptions.dialogCancelListener } returns null
         }
 
@@ -134,7 +134,7 @@ class RateDialogFragmentTest {
 
             rateDialogFragmentSpy.onCancel(mockk())
 
-            verify(exactly = 1) { PreferenceUtil.onLaterButtonClicked(any()) }
+            verify(exactly = 1) { com.rohitjakhar.core.preferences.PreferenceUtil.onLaterButtonClicked(any()) }
         }
 
         @Test

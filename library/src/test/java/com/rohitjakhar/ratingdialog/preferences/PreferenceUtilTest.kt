@@ -2,11 +2,11 @@ package com.rohitjakhar.ratingdialog.preferences
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.rohitjakhar.ratingdialog.logging.RatingLogger
-import com.rohitjakhar.ratingdialog.preferences.PreferenceUtil.PREF_FILE_NAME
-import com.rohitjakhar.ratingdialog.preferences.PreferenceUtil.PREF_KEY_LAUNCH_TIMES
-import com.rohitjakhar.ratingdialog.preferences.PreferenceUtil.PREF_KEY_NUMBER_OF_LATER_BUTTON_CLICKS
-import com.rohitjakhar.ratingdialog.preferences.PreferenceUtil.PREF_KEY_REMIND_TIMESTAMP
+import com.rohitjakhar.core.logging.RatingLogger
+import com.rohitjakhar.core.preferences.PreferenceUtil.PREF_FILE_NAME
+import com.rohitjakhar.core.preferences.PreferenceUtil.PREF_KEY_LAUNCH_TIMES
+import com.rohitjakhar.core.preferences.PreferenceUtil.PREF_KEY_NUMBER_OF_LATER_BUTTON_CLICKS
+import com.rohitjakhar.core.preferences.PreferenceUtil.PREF_KEY_REMIND_TIMESTAMP
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
@@ -37,8 +37,8 @@ class PreferenceUtilTest {
 
     @BeforeEach
     fun setup() {
-        RatingLogger.isLoggingEnabled = false
-        mockkObject(PreferenceUtil)
+        com.rohitjakhar.core.logging.RatingLogger.isLoggingEnabled = false
+        mockkObject(com.rohitjakhar.core.preferences.PreferenceUtil)
         every {
             context.getSharedPreferences(
                 PREF_FILE_NAME,
@@ -58,23 +58,23 @@ class PreferenceUtilTest {
 
     @Test
     fun `correct preferences are used`() {
-        assertEquals(PreferenceUtil.getPreferences(context), sharedPreferences)
+        assertEquals(com.rohitjakhar.core.preferences.PreferenceUtil.getPreferences(context), sharedPreferences)
     }
 
     @Test
     fun `increase launch times works correctly`() {
-        every { PreferenceUtil.getLaunchTimes(context) } returns 0 andThen 1
-        PreferenceUtil.increaseLaunchTimes(context)
-        PreferenceUtil.increaseLaunchTimes(context)
+        every { com.rohitjakhar.core.preferences.PreferenceUtil.getLaunchTimes(context) } returns 0 andThen 1
+        com.rohitjakhar.core.preferences.PreferenceUtil.increaseLaunchTimes(context)
+        com.rohitjakhar.core.preferences.PreferenceUtil.increaseLaunchTimes(context)
         verify(exactly = 1) { editor.putInt(PREF_KEY_LAUNCH_TIMES, 1) }
         verify(exactly = 1) { editor.putInt(PREF_KEY_LAUNCH_TIMES, 2) }
     }
 
     @Test
     fun `increase number of later button clicks works correctly`() {
-        every { PreferenceUtil.getNumberOfLaterButtonClicks(context) } returns 0 andThen 1
-        PreferenceUtil.increaseNumberOfLaterButtonClicks(context)
-        PreferenceUtil.increaseNumberOfLaterButtonClicks(context)
+        every { com.rohitjakhar.core.preferences.PreferenceUtil.getNumberOfLaterButtonClicks(context) } returns 0 andThen 1
+        com.rohitjakhar.core.preferences.PreferenceUtil.increaseNumberOfLaterButtonClicks(context)
+        com.rohitjakhar.core.preferences.PreferenceUtil.increaseNumberOfLaterButtonClicks(context)
         verify(exactly = 1) { editor.putInt(PREF_KEY_NUMBER_OF_LATER_BUTTON_CLICKS, 1) }
         verify(exactly = 1) { editor.putInt(PREF_KEY_NUMBER_OF_LATER_BUTTON_CLICKS, 2) }
     }
@@ -87,7 +87,7 @@ class PreferenceUtilTest {
         every { sharedPreferences.getLong(any(), any()) } returns -1L
         every { System.currentTimeMillis() } returns CURRENT_TIME_IN_MILLIS
 
-        PreferenceUtil.getRemindTimestamp(context)
+        com.rohitjakhar.core.preferences.PreferenceUtil.getRemindTimestamp(context)
 
         verify(exactly = 1) {
             sharedPreferences.getLong(
@@ -99,7 +99,7 @@ class PreferenceUtilTest {
 
     @Test
     fun `reset works correctly`() {
-        PreferenceUtil.reset(context)
+        com.rohitjakhar.core.preferences.PreferenceUtil.reset(context)
         verify(exactly = 1) { editor.clear() }
     }
 

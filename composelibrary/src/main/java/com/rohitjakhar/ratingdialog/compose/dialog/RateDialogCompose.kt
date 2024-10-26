@@ -10,19 +10,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.edit
+import com.rohitjakhar.core.dialog.DialogOptions
+import com.rohitjakhar.core.dialog.DialogType
+import com.rohitjakhar.core.logging.RatingLogger
 import com.rohitjakhar.ratingdialog.compose.R
 import com.rohitjakhar.ratingdialog.compose.dialog.compose_dialog.MailFeedbackDialog
 import com.rohitjakhar.ratingdialog.compose.dialog.compose_dialog.RatingCustomFeedbackDialog
 import com.rohitjakhar.ratingdialog.compose.dialog.compose_dialog.RatingOverviewDialog
 import com.rohitjakhar.ratingdialog.compose.dialog.compose_dialog.RatingStoreDialog
-import com.rohitjakhar.ratingdialog.compose.logging.RatingLogger
-import com.rohitjakhar.ratingdialog.compose.preferences.PreferenceUtil
-import com.rohitjakhar.ratingdialog.compose.preferences.PreferenceUtil.PREF_KEY_DIALOG_SHOW_LATER
-import com.rohitjakhar.ratingdialog.compose.preferences.PreferenceUtil.PREF_KEY_LAUNCH_TIMES
-import com.rohitjakhar.ratingdialog.compose.preferences.PreferenceUtil.PREF_KEY_REMIND_TIMESTAMP
-import com.rohitjakhar.ratingdialog.compose.preferences.PreferenceUtil.getPreferences
-import com.rohitjakhar.ratingdialog.compose.preferences.PreferenceUtil.increaseNumberOfLaterButtonClicks
-import com.rohitjakhar.ratingdialog.compose.preferences.toFloat
+import com.rohitjakhar.core.preferences.PreferenceUtil
+import com.rohitjakhar.core.preferences.PreferenceUtil.getPreferences
+import com.rohitjakhar.core.preferences.PreferenceUtil.increaseNumberOfLaterButtonClicks
+import com.rohitjakhar.core.preferences.toFloat
 
 @Composable
 internal fun RateDialogCompose(
@@ -42,11 +41,7 @@ internal fun RateDialogCompose(
                 RatingOverviewDialog(
                     onDismissRequest = {
                         RatingLogger.verbose(context.getString(R.string.rating_dialog_log_preference_later_button_clicked))
-                        getPreferences(context).edit {
-                            putLong(PREF_KEY_REMIND_TIMESTAMP, System.currentTimeMillis())
-                            putInt(PREF_KEY_LAUNCH_TIMES, 0)
-                            putBoolean(PREF_KEY_DIALOG_SHOW_LATER, true)
-                        }
+                        PreferenceUtil.setRateLaterClick(context)
                         increaseNumberOfLaterButtonClicks(context)
                         onDismissRequest.invoke()
                     },

@@ -8,22 +8,22 @@ import androidx.compose.runtime.Composable
 import androidx.fragment.app.DialogFragment
 import com.google.android.play.core.review.ReviewManager
 import com.google.android.play.core.review.ReviewManagerFactory
-import com.rohitjakhar.ratingdialog.compose.buttons.ConfirmButtonClickListener
-import com.rohitjakhar.ratingdialog.compose.buttons.CustomFeedbackButtonClickListener
-import com.rohitjakhar.ratingdialog.compose.buttons.RateButton
-import com.rohitjakhar.ratingdialog.compose.buttons.RateDialogClickListener
-import com.rohitjakhar.ratingdialog.compose.dialog.DialogConfigModel
-import com.rohitjakhar.ratingdialog.compose.dialog.DialogOptions
+import com.rohitjakhar.core.buttons.ConfirmButtonClickListener
+import com.rohitjakhar.core.buttons.CustomFeedbackButtonClickListener
+import com.rohitjakhar.core.buttons.RateButton
+import com.rohitjakhar.core.buttons.RateDialogClickListener
+import com.rohitjakhar.core.dialog.DialogConfigModel
+import com.rohitjakhar.core.dialog.DialogOptions
+import com.rohitjakhar.core.logging.RatingLogger
+import com.rohitjakhar.core.preferences.ConditionsChecker
+import com.rohitjakhar.core.preferences.MailSettings
+import com.rohitjakhar.core.preferences.PreferenceUtil
+import com.rohitjakhar.core.preferences.RatingThreshold
+import com.rohitjakhar.core.preferences.toFloat
+import com.rohitjakhar.core.preferences.toRatingThreshold
+import com.rohitjakhar.core.utils.FeedbackUtils
 import com.rohitjakhar.ratingdialog.compose.dialog.RateDialogCompose
 import com.rohitjakhar.ratingdialog.compose.dialog.RateDialogFragment
-import com.rohitjakhar.ratingdialog.compose.logging.RatingLogger
-import com.rohitjakhar.ratingdialog.compose.preferences.ConditionsChecker
-import com.rohitjakhar.ratingdialog.compose.preferences.MailSettings
-import com.rohitjakhar.ratingdialog.compose.preferences.PreferenceUtil
-import com.rohitjakhar.ratingdialog.compose.preferences.RatingThreshold
-import com.rohitjakhar.ratingdialog.compose.preferences.toFloat
-import com.rohitjakhar.ratingdialog.compose.preferences.toRatingThreshold
-import com.rohitjakhar.ratingdialog.compose.utils.FeedbackUtils
 
 object AppRatingCompose {
 
@@ -45,8 +45,8 @@ object AppRatingCompose {
     fun openPlayStoreListing(context: Context) = FeedbackUtils.openPlayStoreListing(context)
 
     data class Builder(var componentActivity: Context) {
-        internal var isDebug = false
-        internal var reviewManager: ReviewManager? = null
+        var isDebug = false
+        var reviewManager: ReviewManager? = null
         private var dialogOptions = DialogOptions()
 
         fun setIconDrawable(iconDrawable: Drawable?) = apply {

@@ -26,11 +26,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.graphics.drawable.toBitmap
+import com.rohitjakhar.core.dialog.DialogOptions
 import com.rohitjakhar.ratingdialog.compose.R
-import com.rohitjakhar.ratingdialog.compose.dialog.DialogOptions
-import com.rohitjakhar.ratingdialog.compose.logging.RatingLogger
-import com.rohitjakhar.ratingdialog.compose.preferences.PreferenceUtil
-import com.rohitjakhar.ratingdialog.compose.utils.FeedbackUtils
+import com.rohitjakhar.core.logging.RatingLogger
+import com.rohitjakhar.core.preferences.PreferenceUtil
+import com.rohitjakhar.core.utils.FeedbackUtils
 
 @Composable
 internal fun RatingStoreDialog(

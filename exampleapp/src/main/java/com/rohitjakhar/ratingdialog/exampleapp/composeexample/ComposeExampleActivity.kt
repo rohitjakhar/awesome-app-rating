@@ -1,7 +1,6 @@
 package com.rohitjakhar.ratingdialog.exampleapp.composeexample
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -31,9 +30,9 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.google.gson.Gson
 import com.rohitjakhar.ratingdialog.compose.AppRatingCompose
-import com.rohitjakhar.ratingdialog.compose.preferences.MailSettings
-import com.rohitjakhar.ratingdialog.compose.preferences.RatingThreshold
-import com.rohitjakhar.ratingdialog.dialog.DialogConfigModel
+import com.rohitjakhar.core.dialog.DialogConfigModel
+import com.rohitjakhar.core.preferences.MailSettings
+import com.rohitjakhar.core.preferences.RatingThreshold
 import com.suddenh4x.ratingdialog.exampleapp.R
 
 class ComposeExampleActivity : ComponentActivity() {

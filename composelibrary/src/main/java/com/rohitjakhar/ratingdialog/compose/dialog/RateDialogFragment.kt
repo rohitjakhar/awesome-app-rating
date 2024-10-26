@@ -6,9 +6,11 @@ import android.os.Bundle
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import com.rohitjakhar.core.dialog.DialogOptions
+import com.rohitjakhar.core.dialog.DialogType
 import com.rohitjakhar.ratingdialog.compose.R
-import com.rohitjakhar.ratingdialog.compose.logging.RatingLogger
-import com.rohitjakhar.ratingdialog.compose.preferences.PreferenceUtil
+import com.rohitjakhar.core.logging.RatingLogger
+import com.rohitjakhar.core.preferences.PreferenceUtil
 
 internal class RateDialogFragment : DialogFragment() {
 

@@ -6,9 +6,9 @@ import android.os.Bundle
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import com.rohitjakhar.core.dialog.DialogOptions
+import com.rohitjakhar.core.dialog.DialogType
 import com.rohitjakhar.ratingdialog.R
-import com.rohitjakhar.ratingdialog.logging.RatingLogger
-import com.rohitjakhar.ratingdialog.preferences.PreferenceUtil
 
 internal class RateDialogFragment : DialogFragment() {
 
@@ -58,10 +58,10 @@ internal class RateDialogFragment : DialogFragment() {
 
     override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
-        RatingLogger.info(getString(R.string.rating_dialog_log_rate_dialog_was_canceled))
-        PreferenceUtil.onLaterButtonClicked(requireContext())
+        com.rohitjakhar.core.logging.RatingLogger.info(getString(R.string.rating_dialog_log_rate_dialog_was_canceled))
+        com.rohitjakhar.core.preferences.PreferenceUtil.onLaterButtonClicked(requireContext())
         dialogOptions.dialogCancelListener?.invoke()
-            ?: RatingLogger.info(getString(R.string.rating_dialog_log_rate_dialog_cancel_listener_not_set))
+            ?: com.rohitjakhar.core.logging.RatingLogger.info(getString(R.string.rating_dialog_log_rate_dialog_cancel_listener_not_set))
     }
 
     companion object {

@@ -3,8 +3,7 @@ package com.rohitjakhar.ratingdialog.preferences
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import com.rohitjakhar.ratingdialog.AppRating
-import com.rohitjakhar.ratingdialog.dialog.DialogOptions
-import com.rohitjakhar.ratingdialog.logging.RatingLogger
+import com.rohitjakhar.core.dialog.DialogOptions
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
@@ -31,11 +30,11 @@ class ConditionsCheckerTest {
 
     @BeforeEach
     fun setup() {
-        RatingLogger.isLoggingEnabled = false
-        mockkObject(PreferenceUtil)
-        every { PreferenceUtil.isDialogAgreed(context) } returns false
-        every { PreferenceUtil.isDoNotShowAgain(context) } returns false
-        every { PreferenceUtil.getRemindTimestamp(context) } returns 0
+        com.rohitjakhar.core.logging.RatingLogger.isLoggingEnabled = false
+        mockkObject(com.rohitjakhar.core.preferences.PreferenceUtil)
+        every { com.rohitjakhar.core.preferences.PreferenceUtil.isDialogAgreed(context) } returns false
+        every { com.rohitjakhar.core.preferences.PreferenceUtil.isDoNotShowAgain(context) } returns false
+        every { com.rohitjakhar.core.preferences.PreferenceUtil.getRemindTimestamp(context) } returns 0
         every { context.getString(any()) } returns ""
         every { context.getString(any(), any()) } returns ""
         dialogOptions = DialogOptions()
@@ -45,7 +44,7 @@ class ConditionsCheckerTest {
     inner class WithLaterButtonClicked {
         @BeforeEach
         fun setup() {
-            every { PreferenceUtil.wasLaterButtonClicked(context) } returns true
+            every { com.rohitjakhar.core.preferences.PreferenceUtil.wasLaterButtonClicked(context) } returns true
         }
 
         @AfterEach
@@ -55,53 +54,53 @@ class ConditionsCheckerTest {
 
         @Test
         fun `and dialog agreed should return false`() {
-            every { PreferenceUtil.isDialogAgreed(context) } returns true
+            every { com.rohitjakhar.core.preferences.PreferenceUtil.isDialogAgreed(context) } returns true
             // fixme: Getting strange errors if using property access
-            assertThat(ConditionsChecker.shouldShowDialog(context, dialogOptions)).isFalse()
+            assertThat(com.rohitjakhar.core.preferences.ConditionsChecker.shouldShowDialog(context, dialogOptions)).isFalse()
         }
 
         @Test
         fun `and do not show again clicked should return false`() {
-            every { PreferenceUtil.isDoNotShowAgain(context) } returns true
+            every { com.rohitjakhar.core.preferences.PreferenceUtil.isDoNotShowAgain(context) } returns true
             // fixme: Getting strange errors if using property access
-            assertThat(ConditionsChecker.shouldShowDialog(context, dialogOptions)).isFalse()
+            assertThat(com.rohitjakhar.core.preferences.ConditionsChecker.shouldShowDialog(context, dialogOptions)).isFalse()
         }
 
         @Test
         fun `and false custom condition to show again should immediately return false`() {
             dialogOptions.customConditionToShowAgain = { false }
             // fixme: Getting strange errors if using property access
-            assertThat(ConditionsChecker.shouldShowDialog(context, dialogOptions)).isFalse()
-            verify(exactly = 0) { PreferenceUtil.getMinimumDaysToShowAgain(context) }
+            assertThat(com.rohitjakhar.core.preferences.ConditionsChecker.shouldShowDialog(context, dialogOptions)).isFalse()
+            verify(exactly = 0) { com.rohitjakhar.core.preferences.PreferenceUtil.getMinimumDaysToShowAgain(context) }
         }
 
         @Nested
         inner class AndWithRemindTimestampIsSetToNow {
             @BeforeEach
             fun setup() {
-                every { PreferenceUtil.getRemindTimestamp(context) } returns System.currentTimeMillis()
+                every { com.rohitjakhar.core.preferences.PreferenceUtil.getRemindTimestamp(context) } returns System.currentTimeMillis()
             }
 
             @Nested
             inner class AndWithMinimumDaysToShowAgainIsSetTo0 {
                 @BeforeEach
                 fun setup() {
-                    every { PreferenceUtil.getMinimumDaysToShowAgain(context) } returns 0
+                    every { com.rohitjakhar.core.preferences.PreferenceUtil.getMinimumDaysToShowAgain(context) } returns 0
                 }
 
                 @Nested
                 inner class AndWithMinimumLaunchTimesToShowAgainIsSetTo0 {
                     @BeforeEach
                     fun setup() {
-                        every { PreferenceUtil.getMinimumLaunchTimesToShowAgain(context) } returns 0
+                        every { com.rohitjakhar.core.preferences.PreferenceUtil.getMinimumLaunchTimesToShowAgain(context) } returns 0
                     }
 
                     @Test
                     fun `and with launch times set to 0 returns true`() {
-                        every { PreferenceUtil.getLaunchTimes(context) } returns 0
+                        every { com.rohitjakhar.core.preferences.PreferenceUtil.getLaunchTimes(context) } returns 0
                         // fixme: Getting strange errors if using property access
                         assertThat(
-                            ConditionsChecker.shouldShowDialog(
+                            com.rohitjakhar.core.preferences.ConditionsChecker.shouldShowDialog(
                                 context,
                                 dialogOptions,
                             ),
@@ -111,10 +110,10 @@ class ConditionsCheckerTest {
                     @Test
                     fun `and with true custom condition to show again and launch times set to 0 returns true`() {
                         dialogOptions.customConditionToShowAgain = { true }
-                        every { PreferenceUtil.getLaunchTimes(context) } returns 0
+                        every { com.rohitjakhar.core.preferences.PreferenceUtil.getLaunchTimes(context) } returns 0
                         // fixme: Getting strange errors if using property access
                         assertThat(
-                            ConditionsChecker.shouldShowDialog(
+                            com.rohitjakhar.core.preferences.ConditionsChecker.shouldShowDialog(
                                 context,
                                 dialogOptions,
                             ),
@@ -124,10 +123,10 @@ class ConditionsCheckerTest {
                     @Test
                     fun `and with false custom condition to show again and launch times set to 0 returns false`() {
                         dialogOptions.customConditionToShowAgain = { false }
-                        every { PreferenceUtil.getLaunchTimes(context) } returns 0
+                        every { com.rohitjakhar.core.preferences.PreferenceUtil.getLaunchTimes(context) } returns 0
                         // fixme: Getting strange errors if using property access
                         assertThat(
-                            ConditionsChecker.shouldShowDialog(
+                            com.rohitjakhar.core.preferences.ConditionsChecker.shouldShowDialog(
                                 context,
                                 dialogOptions,
                             ),
@@ -139,15 +138,15 @@ class ConditionsCheckerTest {
                 inner class AndWithMinimumLaunchTimesToShowAgainIsSetTo2 {
                     @BeforeEach
                     fun setup() {
-                        every { PreferenceUtil.getMinimumLaunchTimesToShowAgain(context) } returns 2
+                        every { com.rohitjakhar.core.preferences.PreferenceUtil.getMinimumLaunchTimesToShowAgain(context) } returns 2
                     }
 
                     @Test
                     fun `and with launch times set to 0 returns false`() {
-                        every { PreferenceUtil.getLaunchTimes(context) } returns 0
+                        every { com.rohitjakhar.core.preferences.PreferenceUtil.getLaunchTimes(context) } returns 0
                         // fixme: Getting strange errors if using property access
                         assertThat(
-                            ConditionsChecker.shouldShowDialog(
+                            com.rohitjakhar.core.preferences.ConditionsChecker.shouldShowDialog(
                                 context,
                                 dialogOptions,
                             ),
@@ -156,10 +155,10 @@ class ConditionsCheckerTest {
 
                     @Test
                     fun `and with launch times set to 1 returns false`() {
-                        every { PreferenceUtil.getLaunchTimes(context) } returns 1
+                        every { com.rohitjakhar.core.preferences.PreferenceUtil.getLaunchTimes(context) } returns 1
                         // fixme: Getting strange errors if using property access
                         assertThat(
-                            ConditionsChecker.shouldShowDialog(
+                            com.rohitjakhar.core.preferences.ConditionsChecker.shouldShowDialog(
                                 context,
                                 dialogOptions,
                             ),
@@ -168,10 +167,10 @@ class ConditionsCheckerTest {
 
                     @Test
                     fun `and with launch times set to 2 returns true`() {
-                        every { PreferenceUtil.getLaunchTimes(context) } returns 2
+                        every { com.rohitjakhar.core.preferences.PreferenceUtil.getLaunchTimes(context) } returns 2
                         // fixme: Getting strange errors if using property access
                         assertThat(
-                            ConditionsChecker.shouldShowDialog(
+                            com.rohitjakhar.core.preferences.ConditionsChecker.shouldShowDialog(
                                 context,
                                 dialogOptions,
                             ),
@@ -184,14 +183,14 @@ class ConditionsCheckerTest {
             inner class AndWithMinimumDaysToShowAgainIsSetTo3 {
                 @BeforeEach
                 fun setup() {
-                    every { PreferenceUtil.getMinimumDaysToShowAgain(context) } returns 3
+                    every { com.rohitjakhar.core.preferences.PreferenceUtil.getMinimumDaysToShowAgain(context) } returns 3
                 }
 
                 @Test
                 fun `and with launch times set to 10 returns false`() {
-                    every { PreferenceUtil.getLaunchTimes(context) } returns 10
+                    every { com.rohitjakhar.core.preferences.PreferenceUtil.getLaunchTimes(context) } returns 10
                     // fixme: Getting strange errors if using property access
-                    assertThat(ConditionsChecker.shouldShowDialog(context, dialogOptions)).isFalse()
+                    assertThat(com.rohitjakhar.core.preferences.ConditionsChecker.shouldShowDialog(context, dialogOptions)).isFalse()
                 }
             }
         }
@@ -200,29 +199,29 @@ class ConditionsCheckerTest {
         inner class AndWithRemindTimestampIsSetToThreeDaysAgo {
             @BeforeEach
             fun setup() {
-                every { PreferenceUtil.getRemindTimestamp(context) } returns getDateThreeDaysAgo().time
+                every { com.rohitjakhar.core.preferences.PreferenceUtil.getRemindTimestamp(context) } returns getDateThreeDaysAgo().time
             }
 
             @Nested
             inner class AndWithMinimumDaysToShowAgainIsSetTo0 {
                 @BeforeEach
                 fun setup() {
-                    every { PreferenceUtil.getMinimumDaysToShowAgain(context) } returns 0
+                    every { com.rohitjakhar.core.preferences.PreferenceUtil.getMinimumDaysToShowAgain(context) } returns 0
                 }
 
                 @Nested
                 inner class AndWithMinimumLaunchTimesToShowAgainIsSetTo0 {
                     @BeforeEach
                     fun setup() {
-                        every { PreferenceUtil.getMinimumLaunchTimesToShowAgain(context) } returns 0
+                        every { com.rohitjakhar.core.preferences.PreferenceUtil.getMinimumLaunchTimesToShowAgain(context) } returns 0
                     }
 
                     @Test
                     fun `and with launch times set to 0 returns true`() {
-                        every { PreferenceUtil.getLaunchTimes(context) } returns 0
+                        every { com.rohitjakhar.core.preferences.PreferenceUtil.getLaunchTimes(context) } returns 0
                         // fixme: Getting strange errors if using property access
                         assertThat(
-                            ConditionsChecker.shouldShowDialog(
+                            com.rohitjakhar.core.preferences.ConditionsChecker.shouldShowDialog(
                                 context,
                                 dialogOptions,
                             ),
@@ -234,15 +233,15 @@ class ConditionsCheckerTest {
                 inner class AndWithMinimumLaunchTimesToShowAgainIsSetTo2 {
                     @BeforeEach
                     fun setup() {
-                        every { PreferenceUtil.getMinimumLaunchTimesToShowAgain(context) } returns 2
+                        every { com.rohitjakhar.core.preferences.PreferenceUtil.getMinimumLaunchTimesToShowAgain(context) } returns 2
                     }
 
                     @Test
                     fun `and with launch times set to 0 returns false`() {
-                        every { PreferenceUtil.getLaunchTimes(context) } returns 0
+                        every { com.rohitjakhar.core.preferences.PreferenceUtil.getLaunchTimes(context) } returns 0
                         // fixme: Getting strange errors if using property access
                         assertThat(
-                            ConditionsChecker.shouldShowDialog(
+                            com.rohitjakhar.core.preferences.ConditionsChecker.shouldShowDialog(
                                 context,
                                 dialogOptions,
                             ),
@@ -251,10 +250,10 @@ class ConditionsCheckerTest {
 
                     @Test
                     fun `and with launch times set to 1 returns false`() {
-                        every { PreferenceUtil.getLaunchTimes(context) } returns 1
+                        every { com.rohitjakhar.core.preferences.PreferenceUtil.getLaunchTimes(context) } returns 1
                         // fixme: Getting strange errors if using property access
                         assertThat(
-                            ConditionsChecker.shouldShowDialog(
+                            com.rohitjakhar.core.preferences.ConditionsChecker.shouldShowDialog(
                                 context,
                                 dialogOptions,
                             ),
@@ -263,10 +262,10 @@ class ConditionsCheckerTest {
 
                     @Test
                     fun `and with launch times set to 2 returns true`() {
-                        every { PreferenceUtil.getLaunchTimes(context) } returns 2
+                        every { com.rohitjakhar.core.preferences.PreferenceUtil.getLaunchTimes(context) } returns 2
                         // fixme: Getting strange errors if using property access
                         assertThat(
-                            ConditionsChecker.shouldShowDialog(
+                            com.rohitjakhar.core.preferences.ConditionsChecker.shouldShowDialog(
                                 context,
                                 dialogOptions,
                             ),
@@ -279,22 +278,22 @@ class ConditionsCheckerTest {
             inner class AndWithMinimumDaysToShowAgainIsSetTo3 {
                 @BeforeEach
                 fun setup() {
-                    every { PreferenceUtil.getMinimumDaysToShowAgain(context) } returns 3
+                    every { com.rohitjakhar.core.preferences.PreferenceUtil.getMinimumDaysToShowAgain(context) } returns 3
                 }
 
                 @Nested
                 inner class AndWithMinimumLaunchTimesToShowAgainIsSetTo0 {
                     @BeforeEach
                     fun setup() {
-                        every { PreferenceUtil.getMinimumLaunchTimesToShowAgain(context) } returns 0
+                        every { com.rohitjakhar.core.preferences.PreferenceUtil.getMinimumLaunchTimesToShowAgain(context) } returns 0
                     }
 
                     @Test
                     fun `and with launch times set to 0 returns true`() {
-                        every { PreferenceUtil.getLaunchTimes(context) } returns 0
+                        every { com.rohitjakhar.core.preferences.PreferenceUtil.getLaunchTimes(context) } returns 0
                         // fixme: Getting strange errors if using property access
                         assertThat(
-                            ConditionsChecker.shouldShowDialog(
+                            com.rohitjakhar.core.preferences.ConditionsChecker.shouldShowDialog(
                                 context,
                                 dialogOptions,
                             ),
@@ -306,15 +305,15 @@ class ConditionsCheckerTest {
                 inner class AndWithMinimumLaunchTimesToShowAgainIsSetTo2 {
                     @BeforeEach
                     fun setup() {
-                        every { PreferenceUtil.getMinimumLaunchTimesToShowAgain(context) } returns 2
+                        every { com.rohitjakhar.core.preferences.PreferenceUtil.getMinimumLaunchTimesToShowAgain(context) } returns 2
                     }
 
                     @Test
                     fun `and with launch times set to 0 returns false`() {
-                        every { PreferenceUtil.getLaunchTimes(context) } returns 0
+                        every { com.rohitjakhar.core.preferences.PreferenceUtil.getLaunchTimes(context) } returns 0
                         // fixme: Getting strange errors if using property access
                         assertThat(
-                            ConditionsChecker.shouldShowDialog(
+                            com.rohitjakhar.core.preferences.ConditionsChecker.shouldShowDialog(
                                 context,
                                 dialogOptions,
                             ),
@@ -323,10 +322,10 @@ class ConditionsCheckerTest {
 
                     @Test
                     fun `and with launch times set to 1 returns false`() {
-                        every { PreferenceUtil.getLaunchTimes(context) } returns 1
+                        every { com.rohitjakhar.core.preferences.PreferenceUtil.getLaunchTimes(context) } returns 1
                         // fixme: Getting strange errors if using property access
                         assertThat(
-                            ConditionsChecker.shouldShowDialog(
+                            com.rohitjakhar.core.preferences.ConditionsChecker.shouldShowDialog(
                                 context,
                                 dialogOptions,
                             ),
@@ -335,10 +334,10 @@ class ConditionsCheckerTest {
 
                     @Test
                     fun `and with launch times set to 2 returns true`() {
-                        every { PreferenceUtil.getLaunchTimes(context) } returns 2
+                        every { com.rohitjakhar.core.preferences.PreferenceUtil.getLaunchTimes(context) } returns 2
                         // fixme: Getting strange errors if using property access
                         assertThat(
-                            ConditionsChecker.shouldShowDialog(
+                            com.rohitjakhar.core.preferences.ConditionsChecker.shouldShowDialog(
                                 context,
                                 dialogOptions,
                             ),
@@ -351,14 +350,14 @@ class ConditionsCheckerTest {
             inner class AndWithMinimumDaysToShowAgainIsSetTo7 {
                 @BeforeEach
                 fun setup() {
-                    every { PreferenceUtil.getMinimumDaysToShowAgain(context) } returns 7
+                    every { com.rohitjakhar.core.preferences.PreferenceUtil.getMinimumDaysToShowAgain(context) } returns 7
                 }
 
                 @Test
                 fun `and with launch times set to 10 returns false`() {
-                    every { PreferenceUtil.getLaunchTimes(context) } returns 10
+                    every { com.rohitjakhar.core.preferences.PreferenceUtil.getLaunchTimes(context) } returns 10
                     // fixme: Getting strange errors if using property access
-                    assertThat(ConditionsChecker.shouldShowDialog(context, dialogOptions)).isFalse()
+                    assertThat(com.rohitjakhar.core.preferences.ConditionsChecker.shouldShowDialog(context, dialogOptions)).isFalse()
                 }
             }
         }
@@ -368,7 +367,7 @@ class ConditionsCheckerTest {
     inner class WithLaterButtonNotClicked {
         @BeforeEach
         fun setup() {
-            every { PreferenceUtil.wasLaterButtonClicked(context) } returns false
+            every { com.rohitjakhar.core.preferences.PreferenceUtil.wasLaterButtonClicked(context) } returns false
         }
 
         @AfterEach
@@ -378,53 +377,53 @@ class ConditionsCheckerTest {
 
         @Test
         fun `and dialog agreed should return false`() {
-            every { PreferenceUtil.isDialogAgreed(context) } returns true
+            every { com.rohitjakhar.core.preferences.PreferenceUtil.isDialogAgreed(context) } returns true
             // fixme: Getting strange errors if using property access
-            assertThat(ConditionsChecker.shouldShowDialog(context, dialogOptions)).isFalse()
+            assertThat(com.rohitjakhar.core.preferences.ConditionsChecker.shouldShowDialog(context, dialogOptions)).isFalse()
         }
 
         @Test
         fun `and do not show again clicked should return false`() {
-            every { PreferenceUtil.isDoNotShowAgain(context) } returns true
+            every { com.rohitjakhar.core.preferences.PreferenceUtil.isDoNotShowAgain(context) } returns true
             // fixme: Getting strange errors if using property access
-            assertThat(ConditionsChecker.shouldShowDialog(context, dialogOptions)).isFalse()
+            assertThat(com.rohitjakhar.core.preferences.ConditionsChecker.shouldShowDialog(context, dialogOptions)).isFalse()
         }
 
         @Test
         fun `and false custom condition should immediately return false`() {
             dialogOptions.customCondition = { false }
             // fixme: Getting strange errors if using property access
-            assertThat(ConditionsChecker.shouldShowDialog(context, dialogOptions)).isFalse()
-            verify(exactly = 0) { PreferenceUtil.getMinimumDays(context) }
+            assertThat(com.rohitjakhar.core.preferences.ConditionsChecker.shouldShowDialog(context, dialogOptions)).isFalse()
+            verify(exactly = 0) { com.rohitjakhar.core.preferences.PreferenceUtil.getMinimumDays(context) }
         }
 
         @Nested
         inner class AndWithRemindTimestampIsSetToNow {
             @BeforeEach
             fun setup() {
-                every { PreferenceUtil.getRemindTimestamp(context) } returns System.currentTimeMillis()
+                every { com.rohitjakhar.core.preferences.PreferenceUtil.getRemindTimestamp(context) } returns System.currentTimeMillis()
             }
 
             @Nested
             inner class AndWithMinimumDaysIsSetTo0 {
                 @BeforeEach
                 fun setup() {
-                    every { PreferenceUtil.getMinimumDays(context) } returns 0
+                    every { com.rohitjakhar.core.preferences.PreferenceUtil.getMinimumDays(context) } returns 0
                 }
 
                 @Nested
                 inner class AndWithMinimumLaunchTimesIsSetTo0 {
                     @BeforeEach
                     fun setup() {
-                        every { PreferenceUtil.getMinimumLaunchTimes(context) } returns 0
+                        every { com.rohitjakhar.core.preferences.PreferenceUtil.getMinimumLaunchTimes(context) } returns 0
                     }
 
                     @Test
                     fun `and with launch times set to 0 returns true`() {
-                        every { PreferenceUtil.getLaunchTimes(context) } returns 0
+                        every { com.rohitjakhar.core.preferences.PreferenceUtil.getLaunchTimes(context) } returns 0
                         // fixme: Getting strange errors if using property access
                         assertThat(
-                            ConditionsChecker.shouldShowDialog(
+                            com.rohitjakhar.core.preferences.ConditionsChecker.shouldShowDialog(
                                 context,
                                 dialogOptions,
                             ),
@@ -436,15 +435,15 @@ class ConditionsCheckerTest {
                 inner class AndWithMinimumLaunchTimesIsSetTo2 {
                     @BeforeEach
                     fun setup() {
-                        every { PreferenceUtil.getMinimumLaunchTimes(context) } returns 2
+                        every { com.rohitjakhar.core.preferences.PreferenceUtil.getMinimumLaunchTimes(context) } returns 2
                     }
 
                     @Test
                     fun `and with launch times set to 0 returns false`() {
-                        every { PreferenceUtil.getLaunchTimes(context) } returns 0
+                        every { com.rohitjakhar.core.preferences.PreferenceUtil.getLaunchTimes(context) } returns 0
                         // fixme: Getting strange errors if using property access
                         assertThat(
-                            ConditionsChecker.shouldShowDialog(
+                            com.rohitjakhar.core.preferences.ConditionsChecker.shouldShowDialog(
                                 context,
                                 dialogOptions,
                             ),
@@ -453,10 +452,10 @@ class ConditionsCheckerTest {
 
                     @Test
                     fun `and with launch times set to 1 returns false`() {
-                        every { PreferenceUtil.getLaunchTimes(context) } returns 1
+                        every { com.rohitjakhar.core.preferences.PreferenceUtil.getLaunchTimes(context) } returns 1
                         // fixme: Getting strange errors if using property access
                         assertThat(
-                            ConditionsChecker.shouldShowDialog(
+                            com.rohitjakhar.core.preferences.ConditionsChecker.shouldShowDialog(
                                 context,
                                 dialogOptions,
                             ),
@@ -465,10 +464,10 @@ class ConditionsCheckerTest {
 
                     @Test
                     fun `and with launch times set to 2 returns true`() {
-                        every { PreferenceUtil.getLaunchTimes(context) } returns 2
+                        every { com.rohitjakhar.core.preferences.PreferenceUtil.getLaunchTimes(context) } returns 2
                         // fixme: Getting strange errors if using property access
                         assertThat(
-                            ConditionsChecker.shouldShowDialog(
+                            com.rohitjakhar.core.preferences.ConditionsChecker.shouldShowDialog(
                                 context,
                                 dialogOptions,
                             ),
@@ -481,14 +480,14 @@ class ConditionsCheckerTest {
             inner class AndWithMinimumDaysIsSetTo3 {
                 @BeforeEach
                 fun setup() {
-                    every { PreferenceUtil.getMinimumDays(context) } returns 3
+                    every { com.rohitjakhar.core.preferences.PreferenceUtil.getMinimumDays(context) } returns 3
                 }
 
                 @Test
                 fun `and with launch times set to 10 returns false`() {
-                    every { PreferenceUtil.getLaunchTimes(context) } returns 10
+                    every { com.rohitjakhar.core.preferences.PreferenceUtil.getLaunchTimes(context) } returns 10
                     // fixme: Getting strange errors if using property access
-                    assertThat(ConditionsChecker.shouldShowDialog(context, dialogOptions)).isFalse()
+                    assertThat(com.rohitjakhar.core.preferences.ConditionsChecker.shouldShowDialog(context, dialogOptions)).isFalse()
                 }
             }
         }
@@ -497,29 +496,29 @@ class ConditionsCheckerTest {
         inner class AndWithRemindTimestampIsSetToThreeDaysAgo {
             @BeforeEach
             fun setup() {
-                every { PreferenceUtil.getRemindTimestamp(context) } returns getDateThreeDaysAgo().time
+                every { com.rohitjakhar.core.preferences.PreferenceUtil.getRemindTimestamp(context) } returns getDateThreeDaysAgo().time
             }
 
             @Nested
             inner class AndWithMinimumDaysIsSetTo0 {
                 @BeforeEach
                 fun setup() {
-                    every { PreferenceUtil.getMinimumDays(context) } returns 0
+                    every { com.rohitjakhar.core.preferences.PreferenceUtil.getMinimumDays(context) } returns 0
                 }
 
                 @Nested
                 inner class AndWithMinimumLaunchTimesIsSetTo0 {
                     @BeforeEach
                     fun setup() {
-                        every { PreferenceUtil.getMinimumLaunchTimes(context) } returns 0
+                        every { com.rohitjakhar.core.preferences.PreferenceUtil.getMinimumLaunchTimes(context) } returns 0
                     }
 
                     @Test
                     fun `and with launch times set to 0 returns true`() {
-                        every { PreferenceUtil.getLaunchTimes(context) } returns 0
+                        every { com.rohitjakhar.core.preferences.PreferenceUtil.getLaunchTimes(context) } returns 0
                         // fixme: Getting strange errors if using property access
                         assertThat(
-                            ConditionsChecker.shouldShowDialog(
+                            com.rohitjakhar.core.preferences.ConditionsChecker.shouldShowDialog(
                                 context,
                                 dialogOptions,
                             ),
@@ -529,10 +528,10 @@ class ConditionsCheckerTest {
                     @Test
                     fun `and with true custom condition and launch times set to 0 returns true`() {
                         dialogOptions.customCondition = { true }
-                        every { PreferenceUtil.getLaunchTimes(context) } returns 0
+                        every { com.rohitjakhar.core.preferences.PreferenceUtil.getLaunchTimes(context) } returns 0
                         // fixme: Getting strange errors if using property access
                         assertThat(
-                            ConditionsChecker.shouldShowDialog(
+                            com.rohitjakhar.core.preferences.ConditionsChecker.shouldShowDialog(
                                 context,
                                 dialogOptions,
                             ),
@@ -542,10 +541,10 @@ class ConditionsCheckerTest {
                     @Test
                     fun `and with false custom condition and launch times set to 0 returns false`() {
                         dialogOptions.customCondition = { false }
-                        every { PreferenceUtil.getLaunchTimes(context) } returns 0
+                        every { com.rohitjakhar.core.preferences.PreferenceUtil.getLaunchTimes(context) } returns 0
                         // fixme: Getting strange errors if using property access
                         assertThat(
-                            ConditionsChecker.shouldShowDialog(
+                            com.rohitjakhar.core.preferences.ConditionsChecker.shouldShowDialog(
                                 context,
                                 dialogOptions,
                             ),
@@ -557,15 +556,15 @@ class ConditionsCheckerTest {
                 inner class AndWithMinimumLaunchTimesIsSetTo2 {
                     @BeforeEach
                     fun setup() {
-                        every { PreferenceUtil.getMinimumLaunchTimes(context) } returns 2
+                        every { com.rohitjakhar.core.preferences.PreferenceUtil.getMinimumLaunchTimes(context) } returns 2
                     }
 
                     @Test
                     fun `and with launch times set to 0 returns false`() {
-                        every { PreferenceUtil.getLaunchTimes(context) } returns 0
+                        every { com.rohitjakhar.core.preferences.PreferenceUtil.getLaunchTimes(context) } returns 0
                         // fixme: Getting strange errors if using property access
                         assertThat(
-                            ConditionsChecker.shouldShowDialog(
+                            com.rohitjakhar.core.preferences.ConditionsChecker.shouldShowDialog(
                                 context,
                                 dialogOptions,
                             ),
@@ -574,10 +573,10 @@ class ConditionsCheckerTest {
 
                     @Test
                     fun `and with launch times set to 1 returns false`() {
-                        every { PreferenceUtil.getLaunchTimes(context) } returns 1
+                        every { com.rohitjakhar.core.preferences.PreferenceUtil.getLaunchTimes(context) } returns 1
                         // fixme: Getting strange errors if using property access
                         assertThat(
-                            ConditionsChecker.shouldShowDialog(
+                            com.rohitjakhar.core.preferences.ConditionsChecker.shouldShowDialog(
                                 context,
                                 dialogOptions,
                             ),
@@ -586,10 +585,10 @@ class ConditionsCheckerTest {
 
                     @Test
                     fun `and with launch times set to 2 returns true`() {
-                        every { PreferenceUtil.getLaunchTimes(context) } returns 2
+                        every { com.rohitjakhar.core.preferences.PreferenceUtil.getLaunchTimes(context) } returns 2
                         // fixme: Getting strange errors if using property access
                         assertThat(
-                            ConditionsChecker.shouldShowDialog(
+                            com.rohitjakhar.core.preferences.ConditionsChecker.shouldShowDialog(
                                 context,
                                 dialogOptions,
                             ),
@@ -602,22 +601,22 @@ class ConditionsCheckerTest {
             inner class AndWithMinimumDaysIsSetTo3 {
                 @BeforeEach
                 fun setup() {
-                    every { PreferenceUtil.getMinimumDays(context) } returns 3
+                    every { com.rohitjakhar.core.preferences.PreferenceUtil.getMinimumDays(context) } returns 3
                 }
 
                 @Nested
                 inner class AndWithMinimumLaunchTimesIsSetTo0 {
                     @BeforeEach
                     fun setup() {
-                        every { PreferenceUtil.getMinimumLaunchTimes(context) } returns 0
+                        every { com.rohitjakhar.core.preferences.PreferenceUtil.getMinimumLaunchTimes(context) } returns 0
                     }
 
                     @Test
                     fun `and with launch times set to 0 returns true`() {
-                        every { PreferenceUtil.getLaunchTimes(context) } returns 0
+                        every { com.rohitjakhar.core.preferences.PreferenceUtil.getLaunchTimes(context) } returns 0
                         // fixme: Getting strange errors if using property access
                         assertThat(
-                            ConditionsChecker.shouldShowDialog(
+                            com.rohitjakhar.core.preferences.ConditionsChecker.shouldShowDialog(
                                 context,
                                 dialogOptions,
                             ),
@@ -629,15 +628,15 @@ class ConditionsCheckerTest {
                 inner class AndWithMinimumLaunchTimesIsSetTo2 {
                     @BeforeEach
                     fun setup() {
-                        every { PreferenceUtil.getMinimumLaunchTimes(context) } returns 2
+                        every { com.rohitjakhar.core.preferences.PreferenceUtil.getMinimumLaunchTimes(context) } returns 2
                     }
 
                     @Test
                     fun `and with launch times set to 0 returns false`() {
-                        every { PreferenceUtil.getLaunchTimes(context) } returns 0
+                        every { com.rohitjakhar.core.preferences.PreferenceUtil.getLaunchTimes(context) } returns 0
                         // fixme: Getting strange errors if using property access
                         assertThat(
-                            ConditionsChecker.shouldShowDialog(
+                            com.rohitjakhar.core.preferences.ConditionsChecker.shouldShowDialog(
                                 context,
                                 dialogOptions,
                             ),
@@ -646,10 +645,10 @@ class ConditionsCheckerTest {
 
                     @Test
                     fun `and with launch times set to 1 returns false`() {
-                        every { PreferenceUtil.getLaunchTimes(context) } returns 1
+                        every { com.rohitjakhar.core.preferences.PreferenceUtil.getLaunchTimes(context) } returns 1
                         // fixme: Getting strange errors if using property access
                         assertThat(
-                            ConditionsChecker.shouldShowDialog(
+                            com.rohitjakhar.core.preferences.ConditionsChecker.shouldShowDialog(
                                 context,
                                 dialogOptions,
                             ),
@@ -658,10 +657,10 @@ class ConditionsCheckerTest {
 
                     @Test
                     fun `and with launch times set to 2 returns true`() {
-                        every { PreferenceUtil.getLaunchTimes(context) } returns 2
+                        every { com.rohitjakhar.core.preferences.PreferenceUtil.getLaunchTimes(context) } returns 2
                         // fixme: Getting strange errors if using property access
                         assertThat(
-                            ConditionsChecker.shouldShowDialog(
+                            com.rohitjakhar.core.preferences.ConditionsChecker.shouldShowDialog(
                                 context,
                                 dialogOptions,
                             ),
@@ -674,14 +673,14 @@ class ConditionsCheckerTest {
             inner class AndWithMinimumDaysIsSetTo7 {
                 @BeforeEach
                 fun setup() {
-                    every { PreferenceUtil.getMinimumDays(context) } returns 7
+                    every { com.rohitjakhar.core.preferences.PreferenceUtil.getMinimumDays(context) } returns 7
                 }
 
                 @Test
                 fun `and with launch times set to 10 returns false`() {
-                    every { PreferenceUtil.getLaunchTimes(context) } returns 10
+                    every { com.rohitjakhar.core.preferences.PreferenceUtil.getLaunchTimes(context) } returns 10
                     // fixme: Getting strange errors if using property access
-                    assertThat(ConditionsChecker.shouldShowDialog(context, dialogOptions)).isFalse()
+                    assertThat(com.rohitjakhar.core.preferences.ConditionsChecker.shouldShowDialog(context, dialogOptions)).isFalse()
                 }
             }
         }
@@ -691,7 +690,7 @@ class ConditionsCheckerTest {
     fun `day calculation is correct`() {
         val threeDaysAgo = getDateThreeDaysAgo()
         val currentTime = Date(System.currentTimeMillis())
-        val days = ConditionsChecker.calculateDaysBetween(threeDaysAgo, currentTime)
+        val days = com.rohitjakhar.core.preferences.ConditionsChecker.calculateDaysBetween(threeDaysAgo, currentTime)
         assertEquals(days, 3)
     }
 

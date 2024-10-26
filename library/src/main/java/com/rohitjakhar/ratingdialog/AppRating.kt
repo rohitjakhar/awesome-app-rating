@@ -8,38 +8,33 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
 import com.google.android.play.core.review.ReviewManager
 import com.google.android.play.core.review.ReviewManagerFactory
-import com.rohitjakhar.ratingdialog.buttons.ConfirmButtonClickListener
-import com.rohitjakhar.ratingdialog.buttons.CustomFeedbackButtonClickListener
-import com.rohitjakhar.ratingdialog.buttons.RateButton
-import com.rohitjakhar.ratingdialog.buttons.RateDialogClickListener
-import com.rohitjakhar.ratingdialog.dialog.DialogConfigModel
-import com.rohitjakhar.ratingdialog.dialog.DialogOptions
+import com.rohitjakhar.core.buttons.ConfirmButtonClickListener
+import com.rohitjakhar.core.buttons.CustomFeedbackButtonClickListener
+import com.rohitjakhar.core.buttons.RateButton
+import com.rohitjakhar.core.buttons.RateDialogClickListener
+import com.rohitjakhar.core.dialog.DialogOptions
+import com.rohitjakhar.core.dialog.DialogConfigModel
 import com.rohitjakhar.ratingdialog.dialog.RateDialogFragment
-import com.rohitjakhar.ratingdialog.logging.RatingLogger
-import com.rohitjakhar.ratingdialog.preferences.ConditionsChecker
-import com.rohitjakhar.ratingdialog.preferences.MailSettings
-import com.rohitjakhar.ratingdialog.preferences.PreferenceUtil
-import com.rohitjakhar.ratingdialog.preferences.RatingThreshold
-import com.rohitjakhar.ratingdialog.preferences.toFloat
-import com.rohitjakhar.ratingdialog.preferences.toRatingThreshold
-import com.rohitjakhar.ratingdialog.utils.FeedbackUtils
+import com.rohitjakhar.core.preferences.toFloat
+import com.rohitjakhar.core.preferences.toRatingThreshold
+import com.rohitjakhar.core.utils.FeedbackUtils
 
 object AppRating {
 
     fun reset(context: Context) {
-        PreferenceUtil.reset(context)
-        RatingLogger.warn(context.getString(R.string.rating_dialog_log_settings_reset))
+        com.rohitjakhar.core.preferences.PreferenceUtil.reset(context)
+        com.rohitjakhar.core.logging.RatingLogger.warn(context.getString(R.string.rating_dialog_log_settings_reset))
     }
 
-    fun isDialogAgreed(context: Context) = PreferenceUtil.isDialogAgreed(context)
+    fun isDialogAgreed(context: Context) = com.rohitjakhar.core.preferences.PreferenceUtil.isDialogAgreed(context)
 
-    fun wasLaterButtonClicked(context: Context) = PreferenceUtil.wasLaterButtonClicked(context)
+    fun wasLaterButtonClicked(context: Context) = com.rohitjakhar.core.preferences.PreferenceUtil.wasLaterButtonClicked(context)
 
-    fun wasNeverButtonClicked(context: Context) = PreferenceUtil.isDoNotShowAgain(context)
+    fun wasNeverButtonClicked(context: Context) = com.rohitjakhar.core.preferences.PreferenceUtil.isDoNotShowAgain(context)
 
-    fun getNumberOfLaterButtonClicks(context: Context) = PreferenceUtil.getNumberOfLaterButtonClicks(context)
+    fun getNumberOfLaterButtonClicks(context: Context) = com.rohitjakhar.core.preferences.PreferenceUtil.getNumberOfLaterButtonClicks(context)
 
-    fun openMailFeedback(context: Context, mailSettings: MailSettings) = FeedbackUtils.openMailFeedback(context, mailSettings)
+    fun openMailFeedback(context: Context, mailSettings: com.rohitjakhar.core.preferences.MailSettings) = FeedbackUtils.openMailFeedback(context, mailSettings)
 
     fun openPlayStoreListing(context: Context) = FeedbackUtils.openPlayStoreListing(context)
 
@@ -55,12 +50,12 @@ object AppRating {
 
         fun setIconDrawable(iconDrawable: Drawable?) = apply {
             dialogOptions.iconDrawable = iconDrawable
-            RatingLogger.debug(componentActivity.getString(R.string.rating_dialog_log_use_custom_icon))
+            com.rohitjakhar.core.logging.RatingLogger.debug(componentActivity.getString(R.string.rating_dialog_log_use_custom_icon))
         }
 
         fun setCustomTheme(customTheme: Int) = apply {
             dialogOptions.customTheme = customTheme
-            RatingLogger.debug(componentActivity.getString(R.string.rating_dialog_log_use_custom_theme))
+            com.rohitjakhar.core.logging.RatingLogger.debug(componentActivity.getString(R.string.rating_dialog_log_use_custom_theme))
         }
 
         fun setRateLaterButtonTextId(@StringRes rateLaterButtonTextId: Int) = apply {
@@ -81,7 +76,7 @@ object AppRating {
             }
             dialogConfigModel.countAppLaunch?.let {
                 dialogOptions.countAppLaunch = it
-                RatingLogger.debug(componentActivity.getString(R.string.rating_dialog_log_dont_count_app_launch))
+                com.rohitjakhar.core.logging.RatingLogger.debug(componentActivity.getString(R.string.rating_dialog_log_dont_count_app_launch))
             }
             dialogConfigModel.cancelable?.let {
                 dialogOptions.cancelable = it
@@ -132,7 +127,7 @@ object AppRating {
             rateNeverButtonClickListener: RateDialogClickListener? = null,
         ) = apply {
             dialogOptions.rateNeverButton = RateButton(rateNeverButtonTextId, null, rateNeverButtonClickListener)
-            RatingLogger.debug(componentActivity.getString(R.string.rating_dialog_log_show_rate_never_button))
+            com.rohitjakhar.core.logging.RatingLogger.debug(componentActivity.getString(R.string.rating_dialog_log_show_rate_never_button))
         }
 
         fun showRateNeverButtonAfterNTimes(
@@ -142,7 +137,7 @@ object AppRating {
         ) = apply {
             dialogOptions.rateNeverButton = RateButton(rateNeverButtonTextId, null, rateNeverButtonClickListener)
             dialogOptions.countOfLaterButtonClicksToShowNeverButton = countOfLaterButtonClicks
-            RatingLogger.debug(componentActivity.getString(R.string.rating_dialog_log_show_rate_never_button_later, countOfLaterButtonClicks))
+            com.rohitjakhar.core.logging.RatingLogger.debug(componentActivity.getString(R.string.rating_dialog_log_show_rate_never_button_later, countOfLaterButtonClicks))
         }
 
         /**
@@ -216,7 +211,7 @@ object AppRating {
             dialogOptions.mailFeedbackMessageTextId = feedbackMailMessageTextId
         }
 
-        fun setMailSettingsForFeedbackDialog(mailSettings: MailSettings) = apply {
+        fun setMailSettingsForFeedbackDialog(mailSettings: com.rohitjakhar.core.preferences.MailSettings) = apply {
             dialogOptions.mailSettings = mailSettings
         }
 
@@ -238,7 +233,7 @@ object AppRating {
 
         fun setUseCustomFeedback(useCustomFeedback: Boolean) = apply {
             dialogOptions.useCustomFeedback = useCustomFeedback
-            RatingLogger.debug(componentActivity.getString(R.string.rating_dialog_log_use_custom_feedback, useCustomFeedback))
+            com.rohitjakhar.core.logging.RatingLogger.debug(componentActivity.getString(R.string.rating_dialog_log_use_custom_feedback, useCustomFeedback))
         }
 
         fun setCustomFeedbackMessageTextId(@StringRes feedbackCustomMessageTextId: Int) = apply {
@@ -257,19 +252,19 @@ object AppRating {
          * other settings
          */
 
-        fun setRatingThreshold(ratingThreshold: RatingThreshold) = apply {
+        fun setRatingThreshold(ratingThreshold: com.rohitjakhar.core.preferences.RatingThreshold) = apply {
             dialogOptions.ratingThreshold = ratingThreshold
-            RatingLogger.debug(componentActivity.getString(R.string.rating_dialog_log_set_rating_threshold, ratingThreshold.toFloat()))
+            com.rohitjakhar.core.logging.RatingLogger.debug(componentActivity.getString(R.string.rating_dialog_log_set_rating_threshold, ratingThreshold.toFloat()))
         }
 
         fun setRatingThreshold(ratingThreshold: Float) = apply {
             dialogOptions.ratingThreshold = ratingThreshold.toRatingThreshold()
-            RatingLogger.debug(componentActivity.getString(R.string.rating_dialog_log_set_rating_threshold, ratingThreshold.toInt()))
+            com.rohitjakhar.core.logging.RatingLogger.debug(componentActivity.getString(R.string.rating_dialog_log_set_rating_threshold, ratingThreshold.toInt()))
         }
 
         fun setCancelable(cancelable: Boolean) = apply {
             dialogOptions.cancelable = cancelable
-            RatingLogger.debug(componentActivity.getString(R.string.rating_dialog_log_set_cancelable, cancelable))
+            com.rohitjakhar.core.logging.RatingLogger.debug(componentActivity.getString(R.string.rating_dialog_log_set_cancelable, cancelable))
         }
 
         fun setDialogCancelListener(dialogCancelListener: () -> Unit) = apply {
@@ -277,43 +272,43 @@ object AppRating {
         }
 
         fun setMinimumLaunchTimes(launchTimes: Int) = apply {
-            PreferenceUtil.setMinimumLaunchTimes(componentActivity, launchTimes)
+            com.rohitjakhar.core.preferences.PreferenceUtil.setMinimumLaunchTimes(componentActivity, launchTimes)
         }
 
         fun setMinimumLaunchTimesToShowAgain(launchTimesToShowAgain: Int) = apply {
-            PreferenceUtil.setMinimumLaunchTimesToShowAgain(componentActivity, launchTimesToShowAgain)
+            com.rohitjakhar.core.preferences.PreferenceUtil.setMinimumLaunchTimesToShowAgain(componentActivity, launchTimesToShowAgain)
         }
 
         fun setMinimumDays(minimumDays: Int) = apply {
-            PreferenceUtil.setMinimumDays(componentActivity, minimumDays)
+            com.rohitjakhar.core.preferences.PreferenceUtil.setMinimumDays(componentActivity, minimumDays)
         }
 
         fun setMinimumDaysToShowAgain(minimumDaysToShowAgain: Int) = apply {
-            PreferenceUtil.setMinimumDaysToShowAgain(componentActivity, minimumDaysToShowAgain)
+            com.rohitjakhar.core.preferences.PreferenceUtil.setMinimumDaysToShowAgain(componentActivity, minimumDaysToShowAgain)
         }
 
         fun setCustomCondition(customCondition: () -> Boolean) = apply {
             dialogOptions.customCondition = customCondition
-            RatingLogger.debug(componentActivity.getString(R.string.rating_dialog_log_set_custom_condition))
+            com.rohitjakhar.core.logging.RatingLogger.debug(componentActivity.getString(R.string.rating_dialog_log_set_custom_condition))
         }
 
         fun setCustomConditionToShowAgain(customConditionToShowAgain: () -> Boolean) = apply {
             dialogOptions.customConditionToShowAgain = customConditionToShowAgain
-            RatingLogger.debug(componentActivity.getString(R.string.rating_dialog_log_set_custom_condition_to_show_again))
+            com.rohitjakhar.core.logging.RatingLogger.debug(componentActivity.getString(R.string.rating_dialog_log_set_custom_condition_to_show_again))
         }
 
         fun dontCountThisAsAppLaunch() = apply {
             dialogOptions.countAppLaunch = false
-            RatingLogger.debug(componentActivity.getString(R.string.rating_dialog_log_dont_count_app_launch))
+            com.rohitjakhar.core.logging.RatingLogger.debug(componentActivity.getString(R.string.rating_dialog_log_dont_count_app_launch))
         }
 
         fun setLoggingEnabled(isLoggingEnabled: Boolean) = apply {
-            RatingLogger.isLoggingEnabled = isLoggingEnabled
+            com.rohitjakhar.core.logging.RatingLogger.isLoggingEnabled = isLoggingEnabled
         }
 
         fun setDebug(isDebug: Boolean) = apply {
             this.isDebug = isDebug
-            RatingLogger.warn(componentActivity.getString(R.string.rating_dialog_log_set_debug, isDebug))
+            com.rohitjakhar.core.logging.RatingLogger.warn(componentActivity.getString(R.string.rating_dialog_log_set_debug, isDebug))
         }
 
         /**
@@ -327,7 +322,7 @@ object AppRating {
         fun useGoogleInAppReview() = apply {
             reviewManager = ReviewManagerFactory.create(componentActivity)
             dialogOptions.useGoogleInAppReview = true
-            RatingLogger.info(componentActivity.getString(R.string.rating_dialog_log_use_in_app_review))
+            com.rohitjakhar.core.logging.RatingLogger.info(componentActivity.getString(R.string.rating_dialog_log_use_in_app_review))
         }
 
         /**
@@ -344,7 +339,7 @@ object AppRating {
          */
         fun create(): DialogFragment? = when {
             dialogOptions.useGoogleInAppReview -> {
-                RatingLogger.warn(componentActivity.getString(R.string.rating_dialog_log_create_not_possible_with_in_app_review))
+                com.rohitjakhar.core.logging.RatingLogger.warn(componentActivity.getString(R.string.rating_dialog_log_create_not_possible_with_in_app_review))
                 null
             }
 
@@ -353,38 +348,38 @@ object AppRating {
 
         fun showNow() = when {
             dialogOptions.useGoogleInAppReview -> {
-                RatingLogger.info(componentActivity.getString(R.string.rating_dialog_log_show_in_app_review))
+                com.rohitjakhar.core.logging.RatingLogger.info(componentActivity.getString(R.string.rating_dialog_log_show_in_app_review))
                 showGoogleInAppReview()
             }
 
             else -> {
-                RatingLogger.debug(componentActivity.getString(R.string.rating_dialog_log_show_library_dialog))
+                com.rohitjakhar.core.logging.RatingLogger.debug(componentActivity.getString(R.string.rating_dialog_log_show_library_dialog))
                 (componentActivity as? FragmentActivity)?.let { RateDialogFragment.newInstance(dialogOptions).show(it.supportFragmentManager, TAG) }
-                    ?: RatingLogger.error(componentActivity.getString(R.string.rating_dialog_log_error_extend_from_fragment_activity))
+                    ?: com.rohitjakhar.core.logging.RatingLogger.error(componentActivity.getString(R.string.rating_dialog_log_error_extend_from_fragment_activity))
             }
         }
 
         fun showIfMeetsConditions(): Boolean {
             (componentActivity as? FragmentActivity)?.let {
                 if (it.supportFragmentManager.findFragmentByTag(TAG) != null) {
-                    RatingLogger.info(componentActivity.getString(R.string.rating_dialog_log_stop_checking_conditions))
+                    com.rohitjakhar.core.logging.RatingLogger.info(componentActivity.getString(R.string.rating_dialog_log_stop_checking_conditions))
                     return false
                 }
             }
 
             if (dialogOptions.countAppLaunch) {
-                RatingLogger.debug(componentActivity.getString(R.string.rating_dialog_log_app_launch_counted))
-                PreferenceUtil.increaseLaunchTimes(componentActivity)
+                com.rohitjakhar.core.logging.RatingLogger.debug(componentActivity.getString(R.string.rating_dialog_log_app_launch_counted))
+                com.rohitjakhar.core.preferences.PreferenceUtil.increaseLaunchTimes(componentActivity)
             } else {
-                RatingLogger.info(componentActivity.getString(R.string.rating_dialog_log_app_launch_not_counted))
+                com.rohitjakhar.core.logging.RatingLogger.info(componentActivity.getString(R.string.rating_dialog_log_app_launch_not_counted))
             }
 
-            return if (isDebug || ConditionsChecker.shouldShowDialog(componentActivity, dialogOptions)) {
-                RatingLogger.info(componentActivity.getString(R.string.rating_dialog_log_show_rating_dialog_now))
+            return if (isDebug || com.rohitjakhar.core.preferences.ConditionsChecker.shouldShowDialog(componentActivity, dialogOptions)) {
+                com.rohitjakhar.core.logging.RatingLogger.info(componentActivity.getString(R.string.rating_dialog_log_show_rating_dialog_now))
                 showNow()
                 true
             } else {
-                RatingLogger.info(componentActivity.getString(R.string.rating_dialog_log_dont_show_rating_dialog_now))
+                com.rohitjakhar.core.logging.RatingLogger.info(componentActivity.getString(R.string.rating_dialog_log_dont_show_rating_dialog_now))
                 false
             }
         }
@@ -405,10 +400,10 @@ object AppRating {
                         return@addOnCompleteListener
                     }
                     flow.addOnCompleteListener { task ->
-                        RatingLogger.info(componentActivity.getString(R.string.rating_dialog_log_in_app_review_completed))
-                        PreferenceUtil.onGoogleInAppReviewFlowCompleted(componentActivity)
+                        com.rohitjakhar.core.logging.RatingLogger.info(componentActivity.getString(R.string.rating_dialog_log_in_app_review_completed))
+                        com.rohitjakhar.core.preferences.PreferenceUtil.onGoogleInAppReviewFlowCompleted(componentActivity)
                         dialogOptions.googleInAppReviewCompleteListener?.invoke(task.isSuccessful)
-                            ?: RatingLogger.warn(componentActivity.getString(R.string.rating_dialog_log_in_app_review_no_complete_listener))
+                            ?: com.rohitjakhar.core.logging.RatingLogger.warn(componentActivity.getString(R.string.rating_dialog_log_in_app_review_no_complete_listener))
                     }
                 } else {
                     onGoogleInAppReviewFailure(componentActivity.getString(R.string.rating_dialog_log_in_app_review_initial_request_not_successful))
@@ -417,9 +412,9 @@ object AppRating {
         }
 
         private fun onGoogleInAppReviewFailure(additionalInfo: String) {
-            RatingLogger.warn(componentActivity.getString(R.string.rating_dialog_log_in_app_review_not_successful, additionalInfo))
+            com.rohitjakhar.core.logging.RatingLogger.warn(componentActivity.getString(R.string.rating_dialog_log_in_app_review_not_successful, additionalInfo))
             dialogOptions.googleInAppReviewCompleteListener?.invoke(false)
-                ?: RatingLogger.warn(componentActivity.getString(R.string.rating_dialog_log_in_app_review_no_complete_listener))
+                ?: com.rohitjakhar.core.logging.RatingLogger.warn(componentActivity.getString(R.string.rating_dialog_log_in_app_review_no_complete_listener))
         }
 
         companion object {

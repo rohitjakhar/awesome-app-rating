@@ -14,7 +14,7 @@ class RatingLoggerTest {
 
     @BeforeEach
     fun setup() {
-        RatingLogger.isLoggingEnabled = true
+        com.rohitjakhar.core.logging.RatingLogger.isLoggingEnabled = true
         mockkStatic(Log::class)
         every { Log.v(any(), any()) } returns 0
         every { Log.d(any(), any()) } returns 0
@@ -25,48 +25,48 @@ class RatingLoggerTest {
 
     @Test
     fun `correct tag is being used`() {
-        RatingLogger.verbose("test")
+        com.rohitjakhar.core.logging.RatingLogger.verbose("test")
         verify(exactly = 1) { Log.v(TAG, "test") }
     }
 
     @Test
     fun `verbose works correctly`() {
-        RatingLogger.verbose("verbose")
+        com.rohitjakhar.core.logging.RatingLogger.verbose("verbose")
         verify(exactly = 1) { Log.v(TAG, "verbose") }
     }
 
     @Test
     fun `debug works correctly`() {
-        RatingLogger.debug("debug")
+        com.rohitjakhar.core.logging.RatingLogger.debug("debug")
         verify(exactly = 1) { Log.d(TAG, "debug") }
     }
 
     @Test
     fun `info works correctly`() {
-        RatingLogger.info("info")
+        com.rohitjakhar.core.logging.RatingLogger.info("info")
         verify(exactly = 1) { Log.i(TAG, "info") }
     }
 
     @Test
     fun `warn works correctly`() {
-        RatingLogger.warn("warn")
+        com.rohitjakhar.core.logging.RatingLogger.warn("warn")
         verify(exactly = 1) { Log.w(TAG, "warn") }
     }
 
     @Test
     fun `error works correctly`() {
-        RatingLogger.error("error")
+        com.rohitjakhar.core.logging.RatingLogger.error("error")
         verify(exactly = 1) { Log.e(TAG, "error") }
     }
 
     @Test
     fun `disabling logger works correctly`() {
-        RatingLogger.isLoggingEnabled = false
-        RatingLogger.verbose("")
-        RatingLogger.debug("")
-        RatingLogger.info("")
-        RatingLogger.warn("")
-        RatingLogger.error("")
+        com.rohitjakhar.core.logging.RatingLogger.isLoggingEnabled = false
+        com.rohitjakhar.core.logging.RatingLogger.verbose("")
+        com.rohitjakhar.core.logging.RatingLogger.debug("")
+        com.rohitjakhar.core.logging.RatingLogger.info("")
+        com.rohitjakhar.core.logging.RatingLogger.warn("")
+        com.rohitjakhar.core.logging.RatingLogger.error("")
 
         verify(exactly = 0) { Log.d(any(), any()) }
         verify(exactly = 0) { Log.v(any(), any()) }

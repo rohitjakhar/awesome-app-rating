@@ -7,18 +7,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import com.google.android.play.core.review.ReviewManager
 import com.google.android.play.core.review.ReviewManagerFactory
-import com.rohitjakhar.ratingdialog.buttons.ConfirmButtonClickListener
-import com.rohitjakhar.ratingdialog.buttons.CustomFeedbackButtonClickListener
-import com.rohitjakhar.ratingdialog.buttons.RateDialogClickListener
-import com.rohitjakhar.ratingdialog.dialog.DialogConfigModel
-import com.rohitjakhar.ratingdialog.dialog.DialogOptions
+import com.rohitjakhar.core.buttons.ConfirmButtonClickListener
+import com.rohitjakhar.core.buttons.CustomFeedbackButtonClickListener
+import com.rohitjakhar.core.buttons.RateDialogClickListener
+import com.rohitjakhar.core.dialog.DialogOptions
+import com.rohitjakhar.core.dialog.DialogConfigModel
 import com.rohitjakhar.ratingdialog.dialog.RateDialogFragment
-import com.rohitjakhar.ratingdialog.logging.RatingLogger
-import com.rohitjakhar.ratingdialog.preferences.ConditionsChecker
-import com.rohitjakhar.ratingdialog.preferences.MailSettings
-import com.rohitjakhar.ratingdialog.preferences.PreferenceUtil
-import com.rohitjakhar.ratingdialog.preferences.RatingThreshold
-import com.rohitjakhar.ratingdialog.utils.FeedbackUtils
+import com.rohitjakhar.core.utils.FeedbackUtils
 import io.mockk.Runs
 import io.mockk.confirmVerified
 import io.mockk.every
@@ -49,7 +44,7 @@ class AppRatingTest {
 
     @BeforeEach
     fun setup() {
-        RatingLogger.isLoggingEnabled = false
+        com.rohitjakhar.core.logging.RatingLogger.isLoggingEnabled = false
         dialogOptions = DialogOptions()
         dialogConfigModel = DialogConfigModel()
         unmockkAll()
@@ -238,8 +233,8 @@ class AppRatingTest {
 
     @Test
     fun `rating threshold is set correctly into dialogOptions`() {
-        getBuilder().setRatingThreshold(RatingThreshold.FOUR_AND_A_HALF)
-        assertThat(dialogOptions.ratingThreshold).isEqualTo(RatingThreshold.FOUR_AND_A_HALF)
+        getBuilder().setRatingThreshold(com.rohitjakhar.core.preferences.RatingThreshold.FOUR_AND_A_HALF)
+        assertThat(dialogOptions.ratingThreshold).isEqualTo(com.rohitjakhar.core.preferences.RatingThreshold.FOUR_AND_A_HALF)
     }
 
     @Test
@@ -274,69 +269,69 @@ class AppRatingTest {
 
         @BeforeEach
         fun setup() {
-            mockkObject(PreferenceUtil)
-            every { PreferenceUtil.getPreferences(activity) } returns sharedPreferences
+            mockkObject(com.rohitjakhar.core.preferences.PreferenceUtil)
+            every { com.rohitjakhar.core.preferences.PreferenceUtil.getPreferences(activity) } returns sharedPreferences
         }
 
         @Test
         fun `reset triggers reset of PreferenceUtil`() {
             AppRating.reset(activity)
-            verify { PreferenceUtil.reset(activity) }
+            verify { com.rohitjakhar.core.preferences.PreferenceUtil.reset(activity) }
         }
 
         @Test
         fun `minimum launch times is set correctly into PreferenceUtil`() {
             getBuilder().setMinimumLaunchTimes(10)
-            verify { PreferenceUtil.setMinimumLaunchTimes(activity, 10) }
+            verify { com.rohitjakhar.core.preferences.PreferenceUtil.setMinimumLaunchTimes(activity, 10) }
         }
 
         @Test
         fun `minimum launch times to show again is set correctly into PreferenceUtil`() {
             getBuilder().setMinimumDaysToShowAgain(10)
-            verify { PreferenceUtil.setMinimumDaysToShowAgain(activity, 10) }
+            verify { com.rohitjakhar.core.preferences.PreferenceUtil.setMinimumDaysToShowAgain(activity, 10) }
         }
 
         @Test
         fun `minimum days is set correctly into PreferenceUtil`() {
             getBuilder().setMinimumDays(10)
-            verify { PreferenceUtil.setMinimumDays(activity, 10) }
+            verify { com.rohitjakhar.core.preferences.PreferenceUtil.setMinimumDays(activity, 10) }
         }
 
         @Test
         fun `minimum days to show again is set correctly into PreferenceUtil`() {
             getBuilder().setMinimumDaysToShowAgain(10)
-            verify { PreferenceUtil.setMinimumDaysToShowAgain(activity, 10) }
+            verify { com.rohitjakhar.core.preferences.PreferenceUtil.setMinimumDaysToShowAgain(activity, 10) }
         }
 
         @Test
         fun `is dialog agreed calls correct method of PreferenceUtil`() {
             AppRating.isDialogAgreed(activity)
-            verify { PreferenceUtil.isDialogAgreed(activity) }
+            verify { com.rohitjakhar.core.preferences.PreferenceUtil.isDialogAgreed(activity) }
         }
 
         @Test
         fun `was later button clicked calls correct method of PreferenceUtil`() {
             AppRating.wasLaterButtonClicked(activity)
-            verify { PreferenceUtil.wasLaterButtonClicked(activity) }
+            verify { com.rohitjakhar.core.preferences.PreferenceUtil.wasLaterButtonClicked(activity) }
         }
 
         @Test
         fun `was never button clicked calls correct method of PreferenceUtil`() {
             AppRating.wasNeverButtonClicked(activity)
-            verify { PreferenceUtil.isDoNotShowAgain(activity) }
+            verify { com.rohitjakhar.core.preferences.PreferenceUtil.isDoNotShowAgain(activity) }
         }
 
         @Test
         fun `get number of later button clicks calls correct method of PreferenceUtil`() {
             AppRating.getNumberOfLaterButtonClicks(activity)
-            verify { PreferenceUtil.getNumberOfLaterButtonClicks(activity) }
+            verify { com.rohitjakhar.core.preferences.PreferenceUtil.getNumberOfLaterButtonClicks(activity) }
         }
     }
 
     @Test
     fun `logging enabled is set correctly into RatingLogger`() {
         getBuilder().setLoggingEnabled(false)
-        assertThat(RatingLogger.isLoggingEnabled).isEqualTo(false)
+        assertThat(com.rohitjakhar.core.logging.RatingLogger.isLoggingEnabled).isEqualTo(false)
     }
 
     @Test
@@ -456,10 +451,10 @@ class AppRatingTest {
 
         @BeforeEach
         fun setup() {
-            mockkObject(PreferenceUtil)
-            mockkObject(ConditionsChecker)
-            every { PreferenceUtil.increaseLaunchTimes(any()) } just Runs
-            every { ConditionsChecker.shouldShowDialog(activity, dialogOptions) } returns false
+            mockkObject(com.rohitjakhar.core.preferences.PreferenceUtil)
+            mockkObject(com.rohitjakhar.core.preferences.ConditionsChecker)
+            every { com.rohitjakhar.core.preferences.PreferenceUtil.increaseLaunchTimes(any()) } just Runs
+            every { com.rohitjakhar.core.preferences.ConditionsChecker.shouldShowDialog(activity, dialogOptions) } returns false
             every {
                 activity.supportFragmentManager.findFragmentByTag(TAG)
             } returns null
@@ -482,7 +477,7 @@ class AppRatingTest {
         fun `increases launch times`() {
             getBuilder().showIfMeetsConditions()
 
-            verify(exactly = 1) { PreferenceUtil.increaseLaunchTimes(activity) }
+            verify(exactly = 1) { com.rohitjakhar.core.preferences.PreferenceUtil.increaseLaunchTimes(activity) }
         }
 
         @Test
@@ -491,13 +486,13 @@ class AppRatingTest {
 
             getBuilder().showIfMeetsConditions()
 
-            verify(exactly = 0) { PreferenceUtil.increaseLaunchTimes(activity) }
+            verify(exactly = 0) { com.rohitjakhar.core.preferences.PreferenceUtil.increaseLaunchTimes(activity) }
         }
 
         @Test
         fun `calls show now if conditions are met`() {
             val appRatingBuilder = spyk(getBuilder())
-            every { ConditionsChecker.shouldShowDialog(activity, dialogOptions) } returns true
+            every { com.rohitjakhar.core.preferences.ConditionsChecker.shouldShowDialog(activity, dialogOptions) } returns true
             every { appRatingBuilder.showNow() } just Runs
 
             appRatingBuilder.showIfMeetsConditions()
@@ -508,7 +503,7 @@ class AppRatingTest {
         @Test
         fun `returns true if conditions are met`() {
             val appRatingBuilder = spyk(getBuilder())
-            every { ConditionsChecker.shouldShowDialog(activity, dialogOptions) } returns true
+            every { com.rohitjakhar.core.preferences.ConditionsChecker.shouldShowDialog(activity, dialogOptions) } returns true
             every { appRatingBuilder.showNow() } just Runs
 
             val result = appRatingBuilder.showIfMeetsConditions()
@@ -578,6 +573,11 @@ class AppRatingTest {
         private val confirmButtonClickListener = ConfirmButtonClickListener { }
         private val customFeedbackButtonClickListener = CustomFeedbackButtonClickListener { }
         private val customCondition: () -> Boolean = { true }
-        private val mailSettings = MailSettings("mailAddress", "subject", "message", "errorToast")
+        private val mailSettings = com.rohitjakhar.core.preferences.MailSettings(
+            "mailAddress",
+            "subject",
+            "message",
+            "errorToast"
+        )
     }
 }

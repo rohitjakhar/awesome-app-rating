@@ -14,22 +14,23 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.FragmentActivity
 import coil.load
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.rohitjakhar.core.dialog.DialogOptions
+import com.rohitjakhar.core.dialog.DialogType
 import com.rohitjakhar.ratingdialog.R
-import com.rohitjakhar.ratingdialog.buttons.RateButton
+import com.rohitjakhar.core.buttons.RateButton
 import com.rohitjakhar.ratingdialog.databinding.DialogRatingCustomFeedbackBinding
 import com.rohitjakhar.ratingdialog.databinding.DialogRatingOverviewBinding
 import com.rohitjakhar.ratingdialog.databinding.DialogRatingStoreBinding
-import com.rohitjakhar.ratingdialog.logging.RatingLogger
-import com.rohitjakhar.ratingdialog.preferences.MailSettings
-import com.rohitjakhar.ratingdialog.preferences.PreferenceUtil
-import com.rohitjakhar.ratingdialog.preferences.toFloat
-import com.rohitjakhar.ratingdialog.utils.FeedbackUtils
-import com.rohitjakhar.ratingdialog.utils.setHint
-import com.rohitjakhar.ratingdialog.utils.setMessage
-import com.rohitjakhar.ratingdialog.utils.setNegativeButton
-import com.rohitjakhar.ratingdialog.utils.setPositiveButton
-import com.rohitjakhar.ratingdialog.utils.setText
-import com.rohitjakhar.ratingdialog.utils.setTitle
+import com.rohitjakhar.core.logging.RatingLogger
+import com.rohitjakhar.core.preferences.PreferenceUtil
+import com.rohitjakhar.core.preferences.toFloat
+import com.rohitjakhar.core.utils.FeedbackUtils
+import com.rohitjakhar.core.utils.setHint
+import com.rohitjakhar.core.utils.setMessage
+import com.rohitjakhar.core.utils.setNegativeButton
+import com.rohitjakhar.core.utils.setPositiveButton
+import com.rohitjakhar.core.utils.setText
+import com.rohitjakhar.core.utils.setTitle
 
 
 @SuppressLint("InflateParams")
@@ -175,11 +176,11 @@ internal object DialogManager {
         return builder.create()
     }
 
-    private fun openMailFeedback(context: Context, mailSettings: MailSettings?) {
+    private fun openMailFeedback(context: Context, mailSettings: com.rohitjakhar.core.preferences.MailSettings?) {
         if (mailSettings != null) {
             FeedbackUtils.openMailFeedback(context, mailSettings)
         } else {
-            RatingLogger.error(context.getString(R.string.rating_dialog_log_mail_feedback_no_mail_settings))
+            com.rohitjakhar.core.logging.RatingLogger.error(context.getString(R.string.rating_dialog_log_mail_feedback_no_mail_settings))
         }
     }
 
@@ -203,7 +204,7 @@ internal object DialogManager {
 
                     val userFeedbackText = customFeedbackEditText.text.toString()
                     button.customFeedbackButtonClickListener?.onClick(userFeedbackText)
-                        ?: RatingLogger.error(context.getString(R.string.rating_dialog_log_custom_feedback_no_click_listener))
+                        ?: com.rohitjakhar.core.logging.RatingLogger.error(context.getString(R.string.rating_dialog_log_custom_feedback_no_click_listener))
                 }
             }
             initializeNoFeedbackButton(context, dialogOptions.noFeedbackButton, this)
@@ -255,7 +256,7 @@ internal object DialogManager {
     ) {
         dialogBuilder.setNeutralButton(rateLaterButton.textId) { _, _ ->
             RatingLogger.info(context.getString(R.string.rating_dialog_log_rate_later_button_clicked))
-            PreferenceUtil.onLaterButtonClicked(context)
+            com.rohitjakhar.core.preferences.PreferenceUtil.onLaterButtonClicked(context)
             rateLaterButton.rateDialogClickListener?.onClick()
                 ?: RatingLogger.info(context.getString(R.string.rating_dialog_log_rate_later_button_no_click_listener))
         }
@@ -267,7 +268,7 @@ internal object DialogManager {
         dialogBuilder: AlertDialog.Builder,
     ) {
         val countOfLaterButtonClicksToShowNeverButton = dialogOptions.countOfLaterButtonClicksToShowNeverButton
-        val numberOfLaterButtonClicks = PreferenceUtil.getNumberOfLaterButtonClicks(context)
+        val numberOfLaterButtonClicks = com.rohitjakhar.core.preferences.PreferenceUtil.getNumberOfLaterButtonClicks(context)
         RatingLogger.debug(context.getString(R.string.rating_dialog_log_rate_later_button_was_clicked, numberOfLaterButtonClicks))
         if (countOfLaterButtonClicksToShowNeverButton > numberOfLaterButtonClicks) {
             RatingLogger.info(
@@ -279,7 +280,7 @@ internal object DialogManager {
         dialogOptions.rateNeverButton?.let { button ->
             dialogBuilder.setNegativeButton(button.textId, button.text) { _, _ ->
                 RatingLogger.info(context.getString(R.string.rating_dialog_log_rate_never_button_clicked))
-                PreferenceUtil.setDoNotShowAgain(context)
+                com.rohitjakhar.core.preferences.PreferenceUtil.setDoNotShowAgain(context)
                 button.rateDialogClickListener?.onClick()
                     ?: RatingLogger.info(context.getString(R.string.rating_dialog_log_rate_never_button_no_click_listener))
             }
