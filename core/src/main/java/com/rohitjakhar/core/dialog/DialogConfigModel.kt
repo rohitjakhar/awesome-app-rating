@@ -1,5 +1,8 @@
 package com.rohitjakhar.core.dialog
 
+import androidx.annotation.Keep
+
+@Keep
 data class DialogConfigModel(
     var cancelable: Boolean? = null,
     var useCustomFeedback: Boolean? = null,
