@@ -41,8 +41,10 @@ The library supports API level 14 and higher. You can simply include it in your 
 
 ```groovy
 dependencies {
-    ...
-    implementation 'com.suddenh4x.ratingdialog:awesome-app-rating:2.7.0'
+    
+    implementation("io.github.rohitjakhar.ratingdialog:library:0.0.1")
+    //compose
+    implementation("io.github.rohitjakhar.ratingdialog.compose:compose:0.0.1")
 }
 ```
 
