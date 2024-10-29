@@ -1,8 +1,11 @@
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: "de.mannodermaus.android-junit5"
+import com.vanniktech.maven.publish.SonatypeHost
 
-def version = "0.1.0-SNAPSHOT"
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'de.mannodermaus.android-junit5'
+    id 'com.vanniktech.maven.publish'
+}
 
 android {
     namespace 'com.rohitjakhar.ratingdialog'
@@ -28,10 +31,6 @@ android {
         jvmToolchain 17
     }
 
-    // Workaround for https://github.com/gradle-nexus/publish-plugin/issues/208
-    publishing {
-        singleVariant("release")
-    }
 }
 
 def junitVersion = "5.10.0"
@@ -56,30 +55,34 @@ dependencies {
     testImplementation 'io.mockk:mockk:1.12.7'
 }
 
-afterEvaluate {
-    lint.dependsOn ktlintCheck
-}
+mavenPublishing {
+    coordinates("io.github.rohitjakhar.ratingdialog", "library", "0.0.1")
+    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+    signAllPublications()
 
-ext {
-    PUBLISH_GROUP_ID = 'com.rohitjakhar.ratingdialog'
-    PUBLISH_VERSION = "$version"
-    PUBLISH_ARTIFACT_ID = 'awesome-app-rating'
-    PUBLISH_DESCRIPTION = 'A highly customizable Android library providing a dialog, which asks the user to rate ' +
-            'the app or give feedback. You can also use the library to show the Google in-app review easily under ' +
-            'certain conditions.'
-    PUBLISH_URL = 'https://github.com/rohitjakhar/awesome-app-rating'
-    PUBLISH_LICENSE_NAME = 'Apache License'
-    PUBLISH_LICENSE_URL =
-            'https://github.com/rohitjakhar/awesome-app-rating/blob/master/LICENSE'
-    PUBLISH_DEVELOPER_ID = 'RohitJakhar'
-    PUBLISH_DEVELOPER_NAME = 'Rohit Jakhar'
-    PUBLISH_DEVELOPER_EMAIL = 'RohitJakhar940@gmail.com'
-    PUBLISH_SCM_CONNECTION =
-            'scm:git:github.com/RohitJakhar/awesome-app-rating.git'
-    PUBLISH_SCM_DEVELOPER_CONNECTION =
-            'scm:git:ssh://github.com:RohitJakhar/awesome-app-rating.git'
-    PUBLISH_SCM_URL =
-            'https://github.com/RohitJakhar/awesome-app-rating/tree/master'
+    pom {
+        name = "Awesome App Dialog"
+        description = "A description of what my library does."
+        inceptionYear = "2024"
+        url = "https://github.com/rohitjakhar/awesome-app-rating/"
+        licenses {
+            license {
+                name = "The Apache License, Version 2.0"
+                url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+                distribution = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+            }
+        }
+        developers {
+            developer {
+                id = "rohitjakhar"
+                name = "Rohit Jakhar"
+                url = "https://github.com/rohitjakhar/"
+            }
+        }
+        scm {
+            url = "https://github.com/rohitjakhar/awesome-app-rating/"
+            connection = "scm:git:git://github.com/rohitjakhar/awesome-app-rating.git"
+            developerConnection = "scm:git:ssh://git@github.com/rohitjakhar/awesome-app-rating.git"
+        }
+    }
 }
-
-apply from: "${rootProject.projectDir}/scripts/publish-module.gradle"
