@@ -1,6 +1,9 @@
+import com.vanniktech.maven.publish.SonatypeHost
+
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
+    id 'com.vanniktech.maven.publish'
 }
 
 android {
@@ -37,4 +40,36 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
+}
+
+mavenPublishing {
+    coordinates("io.github.rohitjakhar.ratingdialog", "core", "0.0.1")
+    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+    signAllPublications()
+
+    pom {
+        name = "Awesome App Dialog"
+        description = "A description of what my library does."
+        inceptionYear = "2024"
+        url = "https://github.com/rohitjakhar/awesome-app-rating/"
+        licenses {
+            license {
+                name = "The Apache License, Version 2.0"
+                url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+                distribution = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+            }
+        }
+        developers {
+            developer {
+                id = "rohitjakhar"
+                name = "Rohit Jakhar"
+                url = "https://github.com/rohitjakhar/"
+            }
+        }
+        scm {
+            url = "https://github.com/rohitjakhar/awesome-app-rating/"
+            connection = "scm:git:git://github.com/rohitjakhar/awesome-app-rating.git"
+            developerConnection = "scm:git:ssh://git@github.com/rohitjakhar/awesome-app-rating.git"
+        }
+    }
 }
