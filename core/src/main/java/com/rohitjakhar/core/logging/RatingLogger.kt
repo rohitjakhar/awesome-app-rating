@@ -11,7 +11,11 @@ object RatingLogger {
     }
 
     fun debug(logMessage: String) {
-        if (isLoggingEnabled) Log.d(TAG, logMessage)
+        try {
+            if (isLoggingEnabled) Log.d(TAG, logMessage)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     fun info(logMessage: String) {

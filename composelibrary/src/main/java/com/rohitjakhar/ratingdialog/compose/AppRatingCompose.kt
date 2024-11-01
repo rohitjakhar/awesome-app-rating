@@ -204,7 +204,7 @@ object AppRatingCompose {
 
         fun setRatingThreshold(ratingThreshold: Float) = apply {
             dialogOptions.ratingThreshold = ratingThreshold.toRatingThreshold()
-            RatingLogger.debug(componentActivity.getString(R.string.rating_dialog_log_set_rating_threshold, ratingThreshold.toFloat()))
+            RatingLogger.debug(componentActivity.getString(R.string.rating_dialog_log_set_rating_threshold, ratingThreshold.toInt()))
         }
 
         fun setCancelable(cancelable: Boolean) = apply {

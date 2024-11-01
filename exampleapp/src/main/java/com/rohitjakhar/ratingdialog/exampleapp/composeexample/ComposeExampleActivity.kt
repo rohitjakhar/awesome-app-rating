@@ -153,7 +153,9 @@ class ComposeExampleActivity : ComponentActivity() {
                     }
                 }
                 showCustomConfig -> {
-
+                    OnCustomConfigClicked {
+                        showCustomConfig = false
+                    }
                 }
             }
 
@@ -184,7 +186,7 @@ class ComposeExampleActivity : ComponentActivity() {
                         text = stringResource(id = R.string.text_example_config),
                         style = MaterialTheme.typography.bodyMedium,
                     )
-                    Button(onClick = { showInAppReview = true }, modifier = Modifier.fillMaxWidth()) {
+                    Button(onClick = { showCustomConfig = true }, modifier = Modifier.fillMaxWidth()) {
                         Text(text = stringResource(id = R.string.button_example_custom_config))
                     }
 
@@ -438,13 +440,17 @@ class ComposeExampleActivity : ComponentActivity() {
 
     @Composable
     private fun OnCustomConfigClicked(onClose: () -> Unit) {
+        val config = "{\n  \"cancelable\": true,\n  \"useCustomFeedback\": false,\n  \"mailSetting\": {\n    \"mailAddress\": \"rohitjakhar940@gmail.com\",\n    \"subject\": \"Review for App\",\n    \"text\": \"Heyy, I want to share app review for your\",\n    \"errorToastMessage\": \"Something wrong with mail app!\"\n  },\n  \"customFeedbackMessageText\": \"Suggest us what you don't like\",\n  \"customFeedbackButtonText\": \"Send\",\n  \"useGoogleInAppReview\": false,\n  \"feedbackTitleText\": \"Need your feedback\",\n  \"rateLaterButtonText\": \"Not Now\",\n  \"iconUri\": \"https://cdn.iconscout.com/icon/free/png-512/free-review-icon-download-in-svg-png-gif-file-formats--ratings-stars-three-starts-online-streaming-pack-entertainment-icons-1597983.png?f=webp&w=512\",\n  \"ratingThreshold\": 3.5,\n  \"countAppLaunch\": true,\n  \"countOfLaterButtonClicksToShowNeverButton\": null,\n  \"titleText\": \"Tell us your experience with this app?\",\n  \"messageText\": \"How Test your code bro now\",\n  \"confirmButtonText\": \"Give\",\n  \"showFullStarOnly\": true,\n  \"storeRatingMessageText\": \"If you enjoy using this app, would you mind taking a moment to rate it? Thanks for your support!\",\n  \"storeRatingTitleText\": \"Give on App Store\",\n  \"minimumDays\": null,\n  \"minimumLaunchTimes\": null\n}"
+
+        val dataModel = Gson().fromJson(config, DialogConfigModel::class.java)
         AppRatingCompose.Builder(this)
+            .setConfigConditions(dataModel)
             .setDialogCancelListener {
                 toastLiveData.postValue("Dialog was canceled.")
                 onClose.invoke()
             }
             .setDebug(false)
-
+            .showIfMeetsConditions()
     }
 
     @Composable

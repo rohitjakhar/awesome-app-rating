@@ -56,7 +56,7 @@ dependencies {
 }
 
 mavenPublishing {
-    coordinates("io.github.rohitjakhar.ratingdialog", "library", "0.0.2")
+    coordinates("io.github.rohitjakhar.ratingdialog", "library", lib_version)
     publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
     signAllPublications()
 
