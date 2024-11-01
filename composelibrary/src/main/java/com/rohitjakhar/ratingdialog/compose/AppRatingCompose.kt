@@ -280,7 +280,12 @@ object AppRatingCompose {
         }
 
         fun setConfigConditions(dialogConfigModel: DialogConfigModel) = apply{
+            PreferenceUtil.isDialogAgreed(componentActivity)
             applyCondition(dialogConfigModel)
+        }
+
+        fun appReviewClickListener() {
+
         }
 
         private fun applyCondition(dialogConfigModel: DialogConfigModel) {
