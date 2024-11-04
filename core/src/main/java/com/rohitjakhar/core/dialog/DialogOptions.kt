@@ -12,6 +12,7 @@ import java.io.Serializable
 
 class DialogOptions : Serializable {
 
+    var reviewType: ReviewType = ReviewType.BOTTOM_SHEET
     @Transient
     var iconDrawable: Drawable? = null
     var iconUri: String? = null

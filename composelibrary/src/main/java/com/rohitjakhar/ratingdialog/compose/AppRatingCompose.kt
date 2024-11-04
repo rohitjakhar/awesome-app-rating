@@ -14,6 +14,7 @@ import com.rohitjakhar.core.buttons.RateButton
 import com.rohitjakhar.core.buttons.RateDialogClickListener
 import com.rohitjakhar.core.dialog.DialogConfigModel
 import com.rohitjakhar.core.dialog.DialogOptions
+import com.rohitjakhar.core.dialog.ReviewType
 import com.rohitjakhar.core.logging.RatingLogger
 import com.rohitjakhar.core.preferences.ConditionsChecker
 import com.rohitjakhar.core.preferences.MailSettings
@@ -22,8 +23,8 @@ import com.rohitjakhar.core.preferences.RatingThreshold
 import com.rohitjakhar.core.preferences.toFloat
 import com.rohitjakhar.core.preferences.toRatingThreshold
 import com.rohitjakhar.core.utils.FeedbackUtils
+import com.rohitjakhar.ratingdialog.compose.bottom_sheet.AskReviewBottomSheet
 import com.rohitjakhar.ratingdialog.compose.dialog.RateDialogCompose
-import com.rohitjakhar.ratingdialog.compose.dialog.RateDialogFragment
 
 object AppRatingCompose {
 
@@ -52,6 +53,11 @@ object AppRatingCompose {
         fun setIconDrawable(iconDrawable: Drawable?) = apply {
             dialogOptions.iconDrawable = iconDrawable
             RatingLogger.debug(componentActivity.getString(R.string.rating_dialog_log_use_custom_icon))
+        }
+
+        fun setReviewStyle(reviewType: ReviewType) {
+            dialogOptions.reviewType = reviewType
+            RatingLogger.debug("set review type to $reviewType")
         }
 
         fun setCustomTheme(customTheme: Int) = apply {
@@ -292,6 +298,9 @@ object AppRatingCompose {
             dialogConfigModel.ratingThreshold?.toFloat()?.let {
                 setRatingThreshold(it.toFloat())
             }
+            dialogConfigModel.reviewType?.let {
+                dialogOptions.reviewType = it
+            }
             dialogConfigModel.countAppLaunch?.let {
                 dialogOptions.countAppLaunch = it
                 RatingLogger.debug(componentActivity.getString(R.string.rating_dialog_log_dont_count_app_launch))
@@ -340,19 +349,6 @@ object AppRatingCompose {
             }
         }
 
-
-        /**
-         * This method will return null if the in-app review from Google is used.
-         */
-        fun create(): DialogFragment? = when {
-            dialogOptions.useGoogleInAppReview -> {
-                RatingLogger.warn(componentActivity.getString(R.string.rating_dialog_log_create_not_possible_with_in_app_review))
-                null
-            }
-
-            else -> RateDialogFragment.newInstance(dialogOptions)
-        }
-
         @Composable
         fun showNow() {
             when {
@@ -363,15 +359,23 @@ object AppRatingCompose {
 
                 else -> {
                     RatingLogger.debug(componentActivity.getString(R.string.rating_dialog_log_show_library_dialog))
-                    RateDialogCompose(
-                        dialogOptions = dialogOptions,
-                        onDismissRequest = {
-                            dialogOptions.dialogCancelListener?.invoke()
-                        },
-                        onRatingSelected = {
-                            dialogOptions.dialogCancelListener?.invoke()
+                    when (dialogOptions.reviewType) {
+                        ReviewType.POPUP -> {
+                            RateDialogCompose(
+                                dialogOptions = dialogOptions,
+                                onDismissRequest = {
+                                    dialogOptions.dialogCancelListener?.invoke()
+                                },
+                                onRatingSelected = {
+                                    dialogOptions.dialogCancelListener?.invoke()
+                                },
+                            )
                         }
-                    )
+
+                        ReviewType.BOTTOM_SHEET -> {
+                            AskReviewBottomSheet(dialogOptions = dialogOptions, onRatingSelected = {}, onDismissRequest = {})
+                        }
+                    }
                 }
             }
         }
