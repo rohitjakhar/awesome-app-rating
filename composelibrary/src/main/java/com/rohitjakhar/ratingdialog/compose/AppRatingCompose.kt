@@ -23,7 +23,6 @@ import com.rohitjakhar.core.preferences.toFloat
 import com.rohitjakhar.core.preferences.toRatingThreshold
 import com.rohitjakhar.core.utils.FeedbackUtils
 import com.rohitjakhar.ratingdialog.compose.dialog.RateDialogCompose
-import com.rohitjakhar.ratingdialog.compose.dialog.RateDialogFragment
 
 object AppRatingCompose {
 
@@ -333,19 +332,6 @@ object AppRatingCompose {
             dialogConfigModel.useGoogleInAppReview?.let {
                 dialogOptions.useGoogleInAppReview = it
             }
-        }
-
-
-        /**
-         * This method will return null if the in-app review from Google is used.
-         */
-        fun create(): DialogFragment? = when {
-            dialogOptions.useGoogleInAppReview -> {
-                RatingLogger.warn(componentActivity.getString(R.string.rating_dialog_log_create_not_possible_with_in_app_review))
-                null
-            }
-
-            else -> RateDialogFragment.newInstance(dialogOptions)
         }
 
         @Composable
