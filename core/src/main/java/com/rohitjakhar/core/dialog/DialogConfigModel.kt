@@ -24,4 +24,5 @@ data class DialogConfigModel(
     var storeRatingMessageText: String? = null,
     var minimumDays: Int? = null,
     var minimumLaunchTimes: Int? = null,
+    var reviewType: ReviewType? = null
 )

@@ -14,6 +14,7 @@ import com.rohitjakhar.core.buttons.RateButton
 import com.rohitjakhar.core.buttons.RateDialogClickListener
 import com.rohitjakhar.core.dialog.DialogConfigModel
 import com.rohitjakhar.core.dialog.DialogOptions
+import com.rohitjakhar.core.dialog.ReviewType
 import com.rohitjakhar.core.logging.RatingLogger
 import com.rohitjakhar.core.preferences.ConditionsChecker
 import com.rohitjakhar.core.preferences.MailSettings
@@ -22,6 +23,7 @@ import com.rohitjakhar.core.preferences.RatingThreshold
 import com.rohitjakhar.core.preferences.toFloat
 import com.rohitjakhar.core.preferences.toRatingThreshold
 import com.rohitjakhar.core.utils.FeedbackUtils
+import com.rohitjakhar.ratingdialog.compose.bottom_sheet.AskReviewBottomSheet
 import com.rohitjakhar.ratingdialog.compose.dialog.RateDialogCompose
 
 object AppRatingCompose {
@@ -51,6 +53,11 @@ object AppRatingCompose {
         fun setIconDrawable(iconDrawable: Drawable?) = apply {
             dialogOptions.iconDrawable = iconDrawable
             RatingLogger.debug(componentActivity.getString(R.string.rating_dialog_log_use_custom_icon))
+        }
+
+        fun setReviewStyle(reviewType: ReviewType) {
+            dialogOptions.reviewType = reviewType
+            RatingLogger.debug("set review type to $reviewType")
         }
 
         fun setCustomTheme(customTheme: Int) = apply {
@@ -278,13 +285,16 @@ object AppRatingCompose {
             dialogOptions.googleInAppReviewCompleteListener = googleInAppReviewCompleteListener
         }
 
-        fun setConfigConditions(dialogConfigModel: DialogConfigModel) = apply{
+        fun setConfigConditions(dialogConfigModel: DialogConfigModel) = apply {
             applyCondition(dialogConfigModel)
         }
 
         private fun applyCondition(dialogConfigModel: DialogConfigModel) {
             dialogConfigModel.ratingThreshold?.toFloat()?.let {
                 setRatingThreshold(it.toFloat())
+            }
+            dialogConfigModel.reviewType?.let {
+                dialogOptions.reviewType = it
             }
             dialogConfigModel.countAppLaunch?.let {
                 dialogOptions.countAppLaunch = it
@@ -344,15 +354,23 @@ object AppRatingCompose {
 
                 else -> {
                     RatingLogger.debug(componentActivity.getString(R.string.rating_dialog_log_show_library_dialog))
-                    RateDialogCompose(
-                        dialogOptions = dialogOptions,
-                        onDismissRequest = {
-                            dialogOptions.dialogCancelListener?.invoke()
-                        },
-                        onRatingSelected = {
-                            dialogOptions.dialogCancelListener?.invoke()
+                    when (dialogOptions.reviewType) {
+                        ReviewType.POPUP -> {
+                            RateDialogCompose(
+                                dialogOptions = dialogOptions,
+                                onDismissRequest = {
+                                    dialogOptions.dialogCancelListener?.invoke()
+                                },
+                                onRatingSelected = {
+                                    dialogOptions.dialogCancelListener?.invoke()
+                                },
+                            )
                         }
-                    )
+
+                        ReviewType.BOTTOM_SHEET -> {
+                            AskReviewBottomSheet(dialogOptions = dialogOptions, onRatingSelected = {}, onDismissRequest = {})
+                        }
+                    }
                 }
             }
         }
