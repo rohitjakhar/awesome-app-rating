@@ -5,7 +5,6 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
-import androidx.fragment.app.DialogFragment
 import com.google.android.play.core.review.ReviewManager
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.rohitjakhar.core.buttons.ConfirmButtonClickListener
