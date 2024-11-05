@@ -15,9 +15,9 @@ You can also use this library to show the [Google in-app review](https://develop
 (Source: https://developer.android.com/guide/playcore/in-app-review)
 
 ## Working
-- [ x ] Add compose support natively.
-- [ x ] Add Remote Configure.
-- [ x ] Add Core module for centralize code.
+- [x] Add compose support natively.
+- [x] Add Remote Configure.
+- [x] Add Core module for centralize code.
 - [ ] Add Bottom Sheet Review Support.
 - [ ] Optimise Core module for code redundant.
 - [ ] Write Test case again for libary and compose module.
