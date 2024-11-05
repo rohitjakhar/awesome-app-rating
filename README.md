@@ -42,9 +42,9 @@ The library supports API level 14 and higher. You can simply include it in your 
 ```groovy
 dependencies {
     
-    implementation("io.github.rohitjakhar.ratingdialog:library:0.0.1")
+    implementation("io.github.rohitjakhar.ratingdialog:library:0.0.4")
     //compose
-    implementation("io.github.rohitjakhar.ratingdialog.compose:compose:0.0.1")
+    implementation("io.github.rohitjakhar.ratingdialog:compose:0.0.4")
 }
 ```
 
@@ -54,16 +54,6 @@ allprojects {
     repositories {
 		...
         mavenCentral()
-    }
-}
-```
-
-If you want to use an older version of this library, you have to use JCenter:
-```groovy
-allprojects {
-    repositories {
-		...
-        jcenter()
     }
 }
 ```
@@ -491,13 +481,32 @@ AppRating.Builder(this)
     .showIfMeetsConditions()
 ```
 
+### Remote Conditions
+
+You can easily use conditions from remote config to show the dialog not (only) on app start but e.g. pass dataConfig modal to builder drive from firebase remote config or api call and pass it to dialog config:
+
+```kotlin
+    private fun showConfigDialog(dialogConfigModel: DialogConfigModel) {
+    AppRating.Builder(this)
+        .setDebug(true)
+        .setConfigConditions(
+            dialogConfigModel,
+        )
+        .showIfMeetsConditions()
+}
+```
+
+
 If you want to show the dialog on app start, but with your custom conditions, you can of course just call the Builder in your `onCreate()` method of your main Activity class. If so, don't forget to remove the `dontCountThisAsAppLaunch()` method from the example above.
 
 ### Jetpack Compose
 
-The libraries dialog is implemented as a `DialogFragment` and thus needs a `FragmentActivity` to get displayed. If you use Jetpack Compose your activity maybe extends from `ComponentActivity` and because this class isn't a subtype of `FragmentActivity` the dialog won't show up. You'll only see an error message in LogCat. 
+To use this library in Jetpack Compose project you need to add compose library module.
 
-To get it working you just have to change your activity to extend from `AppCompatActivity` instead (or `FragmentActivity`). Or you just use the official Google in-app review which doesn't depend on fragments.
+```kotlin
+    implementation("io.github.rohitjakhar.ratingdialog:compose:0.0.4")
+```
+and called those function inside your compose function because compose function called only from compose function. and rest of library will handle it.
 
 ## Note
 
@@ -525,7 +534,7 @@ The following things are highly recommended to not annoy the user, which in turn
 ## License
 
 ```
-Copyright (C) 2023 SuddenH4X
+Copyright (C) 2023 RohitJakhar
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
