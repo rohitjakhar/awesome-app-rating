@@ -15,6 +15,7 @@ import androidx.compose.ui.platform.LocalContext
 import com.rohitjakhar.core.dialog.DialogOptions
 import com.rohitjakhar.core.dialog.DialogType
 import com.rohitjakhar.core.logging.RatingLogger
+import com.rohitjakhar.core.preferences.MailSettings
 import com.rohitjakhar.core.preferences.PreferenceUtil
 import com.rohitjakhar.core.utils.FeedbackUtils
 import com.rohitjakhar.ratingdialog.compose.R
@@ -34,69 +35,51 @@ internal fun AskReviewBottomSheet(
     }
     when (dialogType) {
         DialogType.RATING_OVERVIEW -> {
-            ModalBottomSheet(onDismissRequest = onDismissRequest) {
-                Text("Are you enjoying the app?")
-                Row {
-                    TextButton(
-                        onClick = {
-                            RatingLogger.info(context.getString(R.string.rating_dialog_log_rating_overview_above_threshold))
-                            dialogType1 = DialogType.RATING_STORE
-                        },
-                    ) {
-                        Text("Yes")
-                    }
-                    TextButton(
-                        onClick = {
-                            dialogType1 = when {
-                                dialogOptions.useCustomFeedback -> {
-                                    RatingLogger.info(context.getString(R.string.rating_dialog_log_rating_overview_below_threshold_with_custom_feedback))
-                                    PreferenceUtil.setDialogAgreed(context)
-                                    DialogType.FEEDBACK_CUSTOM
-                                }
+            RatingOverviewBottomSheet(
+                onDismissRequest = {},
+                onSelect = {
+                    dialogType1 = when {
+                        dialogOptions.useCustomFeedback -> {
+                            RatingLogger.info(context.getString(R.string.rating_dialog_log_rating_overview_below_threshold_with_custom_feedback))
+                            PreferenceUtil.setDialogAgreed(context)
+                            DialogType.FEEDBACK_CUSTOM
+                        }
 
-                                else -> {
-                                    RatingLogger.info(context.getString(R.string.rating_dialog_log_rating_overview_below_threshold_without_custom_feedback))
-                                    PreferenceUtil.setDialogAgreed(context)
-                                    DialogType.FEEDBACK_MAIL
-                                }
-                            }
-                        },
-                    ) {
-                        Text("No")
+                        else -> {
+                            RatingLogger.info(context.getString(R.string.rating_dialog_log_rating_overview_below_threshold_without_custom_feedback))
+                            PreferenceUtil.setDialogAgreed(context)
+                            DialogType.FEEDBACK_MAIL
+                        }
                     }
-                }
-            }
+                },
+            )
         }
 
         DialogType.RATING_STORE -> {
-            ModalBottomSheet(onDismissRequest = onDismissRequest) {
-                Text("Please Give Rating on Store")
-                Row {
-                    TextButton(
-                        onClick = {
-                            PreferenceUtil.setDialogAgreed(context)
-                            FeedbackUtils.openPlayStoreListing(context)
-                        },
-                    ) {
-                        Text("Yes")
-                    }
-                    TextButton(onClick = {}) {
-                        Text("No")
-                    }
-                }
-            }
+            RatingStoreBottomSheet(onDismissRequest = {}, onSelect = {
+                PreferenceUtil.setDialogAgreed(context)
+                FeedbackUtils.openPlayStoreListing(context)
+            })
         }
 
         DialogType.FEEDBACK_MAIL -> {
-            ModalBottomSheet(onDismissRequest = onDismissRequest) {
-
-            }
+            RatingCustomBottomSheet(
+                onDismissRequest = {},
+                onSelect = {
+                    PreferenceUtil.setDialogAgreed(context)
+                    dialogOptions.mailSettings?.let { FeedbackUtils.openMailFeedback(context, it) }
+                },
+            )
         }
 
         DialogType.FEEDBACK_CUSTOM -> {
-            ModalBottomSheet(onDismissRequest = onDismissRequest) {
-
-            }
+            RatingCustomBottomSheet(
+                onDismissRequest = {},
+                onSelect = {
+                    PreferenceUtil.setDialogAgreed(context)
+                    FeedbackUtils.openPlayStoreListing(context)
+                },
+            )
         }
     }
 }
