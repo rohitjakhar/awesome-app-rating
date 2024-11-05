@@ -14,6 +14,16 @@ You can also use this library to show the [Google in-app review](https://develop
 
 (Source: https://developer.android.com/guide/playcore/in-app-review)
 
+## Working
+- [ x ] Add compose support natively.
+- [ x ] Add Remote Configure.
+- [ x ] Add Core module for centralize code.
+- [ ] Add Bottom Sheet Review Support.
+- [ ] Optimise Core module for code redundant.
+- [ ] Write Test case again for libary and compose module.
+- [ ] Add pipeline to upload on maven central.
+- [ ] Fix UI code issue and make them configure from builder.
+
 ## Features
 - Let the dialog (or the [Google in-app review](https://developer.android.com/guide/playcore/in-app-review)) show up at a defined app session, after n days of usage and/or if your custom conditions meet
 - Auto fetches the app icon to use it in the dialog
